@@ -19,8 +19,6 @@
 
 ## 🏛️ Topologia de Arquitetura de Nuvem
 
-O tráfego de usuários não acessa os servidores de computação diretamente. A infraestrutura adota isolamento perimetral em camadas:
-
 ```mermaid
 flowchart TD
     subgraph Edge ["🌐 Camada de Borda & Internet"]
@@ -57,7 +55,6 @@ flowchart TD
     class CF cloudflare;
     class LB,OKE,IGW,NGW,SGW oci;
     class User edge;
-
 flowchart LR
     Dev["👨‍💻 Dev (Hugo)"] -->|"git push origin main"| GH["🐙 GitHub Actions"]
 
