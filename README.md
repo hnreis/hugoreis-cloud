@@ -58,6 +58,8 @@ flowchart TD
     class LB,OKE,IGW,NGW,SGW oci;
     class User edge;
 ```
+🚀 Esteira Automatizada de CI/CD (GitHub Actions)
+A cada integração na branch main, o pipeline executa o ciclo completo de entrega contínua em formato vertical sem intervenção manual:
 ```mermaid
 flowchart TD
     Dev["👨‍💻 Dev (Hugo)"] -->|"git push origin main"| GH["🐙 GitHub Actions"]
