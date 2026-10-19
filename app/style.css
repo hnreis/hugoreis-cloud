@@ -57,7 +57,18 @@ header { display: flex; justify-content: space-between; align-items: center; bor
 .console-line.err { color: var(--danger); }
 .console-line.success { color: var(--success); }
 
-.specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+  gap: 1rem;
+  justify-content: center;
+}
+
+@media (min-width: 960px) {
+  .specs-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
 .spec-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; display: flex; flex-direction: column; justify-content: space-between; }
 .spec-card h3 { font-size: 0.95rem; color: var(--accent); margin-bottom: 0.6rem; }
 .spec-card p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
