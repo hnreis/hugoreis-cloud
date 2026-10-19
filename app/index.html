@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hugo Reis | Cloud Architecture & Kubernetes Cockpit</title>
-  <link rel="stylesheet" href="style.css?v=2">
-  <script src="app.js?v=2" defer></script>
+  <link rel="stylesheet" href="style.css?v=3">
+  <script src="app.js?v=3" defer></script>
 </head>
 <body>
   <div class="container">
@@ -70,7 +70,7 @@
 
         <div class="pod-card" id="pod-card-2">
           <div class="pod-title">
-            <span id="pod-name-2">hugoreis-app-7d9f8-node2</span>
+            <span id="pod-name-2">hugoreis-app-3c2e1-node2</span>
             <span class="pod-badge badge-running" id="pod-status-2">Running</span>
           </div>
           <div class="pod-meta">
@@ -96,10 +96,11 @@
     </section>
 
     <div class="specs-grid">
+      <!-- Linha 1 de 4 Cartões -->
       <div class="spec-card doc-highlight">
         <h3>📚 Documentação & Git</h3>
         <p>Conheça a topologia de rede, políticas Zero Trust e automação de CI/CD documentadas no repositório.</p>
-        <a href="https://github.com/hnreis/hugoreis-cloud/blob/main/README.pt-BR.md" target="_blank" class="doc-link">📖 Ver Documentação Técnica (PT-BR) &rarr;</a>
+        <a href="https://github.com/hnreis/hugoreis-cloud/blob/main/README.pt-BR.md" target="_blank" class="doc-link">📖 Ver Docs (PT-BR) &rarr;</a>
       </div>
       <div class="spec-card">
         <h3>🛡️ Borda & Zero Trust</h3>
@@ -113,9 +114,23 @@
         <h3>🚀 Pipeline CI/CD</h3>
         <p>GitHub Actions com compilação nativa ARM64 e implantação automatizada sem tempo de inatividade.</p>
       </div>
+
+      <!-- Linha 2 de 4 Cartões -->
       <div class="spec-card">
         <h3>💰 FinOps Always Free</h3>
         <p>Arquitetura sustentável utilizando recursos elegíveis Always Free na Oracle Cloud.</p>
+      </div>
+      <div class="spec-card">
+        <h3>🔐 Automação TLS (cert-manager)</h3>
+        <p>Emissão de certificados Let's Encrypt com desafio DNS-01 automatizado via API da Cloudflare.</p>
+      </div>
+      <div class="spec-card">
+        <h3>📦 Service Gateway & OCIR</h3>
+        <p>Download de contêineres trafegando internamente pelo backbone privado da Oracle, sem internet.</p>
+      </div>
+      <div class="spec-card">
+        <h3>⚡ Computação ARM64 (Ampere A1)</h3>
+        <p>Processadores de arquitetura ARM com alta densidade operacional e imagens Docker compiladas nativamente.</p>
       </div>
     </div>
 
