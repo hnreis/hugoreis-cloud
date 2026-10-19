@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hugo Reis | Cloud Architecture & Kubernetes Cockpit</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <h1>Hugo Reis</h1>
+        <p>Cloud Infrastructure & Network Security Engineer</p>
+      </div>
+      <a href="index.html" class="lang-btn">Mudar para 🇧🇷 Português</a>
+    </header>
+
+    <div class="telemetry-strip">
+      <div class="telemetry-card">
+        <div class="telemetry-label">Edge & Security</div>
+        <div class="telemetry-val"><span class="status-dot"></span> Cloudflare WAF</div>
+      </div>
+      <div class="telemetry-card">
+        <div class="telemetry-label">Managed Cluster</div>
+        <div class="telemetry-val">OKE v1.37 (ARM64)</div>
+      </div>
+      <div class="telemetry-card">
+        <div class="telemetry-label">Cloud Region</div>
+        <div class="telemetry-val">us-chicago-1</div>
+      </div>
+      <div class="telemetry-card">
+        <div class="telemetry-label">Internal Routing</div>
+        <div class="telemetry-val">Zero Trust Subnet</div>
+      </div>
+    </div>
+
+    <section class="cockpit-panel">
+      <div class="cockpit-header">
+        <div>
+          <h2>☸️ Kubernetes Cockpit & Chaos Engineering</h2>
+          <p style="font-size: 0.82rem; color: var(--text-muted);">Live resilience and self-healing simulation of production replicas.</p>
+        </div>
+        <div class="actions-bar">
+          <button class="btn" id="btn-traffic">🌐 Simulate HTTP Traffic</button>
+          <button class="btn btn-danger" id="btn-kill-1">💥 Kill Pod 1</button>
+          <button class="btn btn-danger" id="btn-kill-2">💥 Kill Pod 2</button>
+        </div>
+      </div>
+
+      <div class="pods-grid">
+        <div class="pod-card" id="pod-card-1">
+          <div class="pod-title">
+            <span>hugoreis-app-7d9f8-node1</span>
+            <span class="pod-badge badge-running" id="pod-status-1">Running</span>
+          </div>
+          <div class="pod-meta">
+            <span><strong>OCI Node:</strong> 10.0.2.23 (Ampere A1)</span>
+            <span><strong>IP Address:</strong> 10.244.0.14</span>
+            <span><strong>Ready:</strong> <span id="pod-ready-1">1/1</span></span>
+            <span><strong>Restarts:</strong> <span id="pod-restarts-1">0</span></span>
+            <span><strong>Uptime:</strong> 17h 42m</span>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);" id="pod-load-1">Traffic Load: 50% (Normal)</div>
+        </div>
+
+        <div class="pod-card" id="pod-card-2">
+          <div class="pod-title">
+            <span>hugoreis-app-7d9f8-node2</span>
+            <span class="pod-badge badge-running" id="pod-status-2">Running</span>
+          </div>
+          <div class="pod-meta">
+            <span><strong>OCI Node:</strong> 10.0.2.89 (Ampere A1)</span>
+            <span><strong>IP Address:</strong> 10.244.1.09</span>
+            <span><strong>Ready:</strong> <span id="pod-ready-2">1/1</span></span>
+            <span><strong>Restarts:</strong> <span id="pod-restarts-2">0</span></span>
+            <span><strong>Uptime:</strong> 17h 42m</span>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);" id="pod-load-2">Traffic Load: 50% (Normal)</div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem;">
+          📋 Cluster Event Stream Console
+        </div>
+        <div class="console-box" id="console-log">
+          <div class="console-line success">[ok] OKE cluster connected in us-chicago-1. Active ingress via Cloudflare.</div>
+          <div class="console-line">[k8s] Deployment hugoreis-app in healthy state (2 active replicas).</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="specs-grid">
+      <div class="spec-card doc-highlight">
+        <h3>📚 Architecture Docs & Git</h3>
+        <p>Explore the comprehensive Zero Trust network topology, security audit, and CI/CD pipeline on GitHub.</p>
+        <a href="https://github.com/hnreis/hugoreis-cloud/blob/main/README.md" target="_blank" class="doc-link">📖 View Technical Documentation (EN) &rarr;</a>
+      </div>
+      <div class="spec-card">
+        <h3>🛡️ Edge & Zero Trust</h3>
+        <p>Origin IP masked by Cloudflare. Port 443 strictly restricted to official Cloudflare CIDR blocks.</p>
+      </div>
+      <div class="spec-card">
+        <h3>🔒 Private Subnet</h3>
+        <p>Worker nodes isolated without public IPs. Egress securely routed via NAT & Service Gateways.</p>
+      </div>
+      <div class="spec-card">
+        <h3>🚀 CI/CD Pipeline</h3>
+        <p>GitHub Actions automated ARM64 native build and zero-downtime rolling updates.</p>
+      </div>
+      <div class="spec-card">
+        <h3>💰 Always Free FinOps</h3>
+        <p>Sustainable cloud infrastructure fully operated under Oracle Cloud Always Free allowances.</p>
+      </div>
+    </div>
+
+    <footer>
+      <p>
+        <strong>Hugo Reis</strong> &bull; 
+        <a href="https://www.linkedin.com/in/hugo-nogueira-dos-reis/" target="_blank">LinkedIn</a> &bull; 
+        <a href="https://github.com/hnreis/hugoreis-cloud" target="_blank">GitHub Repository</a> &bull; 
+        <a href="https://www.hugoreis.cloud/en.html">hugoreis.cloud/en.html</a>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>
