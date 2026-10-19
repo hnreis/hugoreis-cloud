@@ -105,7 +105,8 @@ flowchart TD
 
 ---
 ## 👨‍💻 Autor
-Hugo Reis
+## Hugo Reis
 Cloud Infrastructure & Network Security Engineer
-  💼 LinkedIn: linkedin.com/in/hugo-nogueira-dos-reis
-  🌐 Portfólio: hugoreis.cloud
+
+- 💼 LinkedIn: linkedin.com/in/hugo-nogueira-dos-reis
+- 🌐 Portfólio: hugoreis.cloud
