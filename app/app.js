@@ -1,10 +1,41 @@
 document.addEventListener('DOMContentLoaded', () => {
   const isEn = document.documentElement.lang.startsWith('en');
 
+  // Inicializa o estado persistente com base em timestamps reais
+  const now = Date.now();
+  const defaultInitialUptime = 17 * 3600 + 42 * 60; // 17h 42m em segundos
+
+  if (!localStorage.getItem('k8s_pod1_start')) {
+    localStorage.setItem('k8s_pod1_start', (now - defaultInitialUptime * 1000).toString());
+    localStorage.setItem('k8s_pod1_total', '14');
+    localStorage.setItem('k8s_pod1_session', '0');
+    localStorage.setItem('k8s_pod1_hash', '7d9f8');
+  }
+
+  if (!localStorage.getItem('k8s_pod2_start')) {
+    localStorage.setItem('k8s_pod2_start', (now - defaultInitialUptime * 1000).toString());
+    localStorage.setItem('k8s_pod2_total', '9');
+    localStorage.setItem('k8s_pod2_session', '0');
+    localStorage.setItem('k8s_pod2_hash', '3c2e1');
+  }
+
   let podStatus = {
-    1: { state: 'Running', totalRestarts: 14, sessionRestarts: 0, healthy: true, uptimeSeconds: 63720 },
-    2: { state: 'Running', totalRestarts: 9, sessionRestarts: 0, healthy: true, uptimeSeconds: 63720 }
+    1: {
+      healthy: true,
+      startTime: parseInt(localStorage.getItem('k8s_pod1_start')),
+      totalRestarts: parseInt(localStorage.getItem('k8s_pod1_total')),
+      sessionRestarts: parseInt(localStorage.getItem('k8s_pod1_session')),
+      hash: localStorage.getItem('k8s_pod1_hash')
+    },
+    2: {
+      healthy: true,
+      startTime: parseInt(localStorage.getItem('k8s_pod2_start')),
+      totalRestarts: parseInt(localStorage.getItem('k8s_pod2_total')),
+      sessionRestarts: parseInt(localStorage.getItem('k8s_pod2_session')),
+      hash: localStorage.getItem('k8s_pod2_hash')
+    }
   };
+
   let nextTarget = 1;
 
   const btnTraffic = document.getElementById('btn-traffic');
@@ -15,24 +46,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnKill2 = document.getElementById('btn-kill-2');
 
   function formatUptime(seconds) {
-    const h = Math.floor(seconds / 3600);
+    const d = Math.floor(seconds / 86400);
+    const h = Math.floor((seconds % 86400) / 3600);
     const m = Math.floor((seconds % 3600) / 60);
     const s = seconds % 60;
+    if (d > 0) return `${d}d ${h}h ${m}m`;
     if (h > 0) return `${h}h ${m}m ${s}s`;
     if (m > 0) return `${m}m ${s}s`;
     return `${s}s`;
   }
 
-  // Incrementa o tempo ativo segundo a segundo
-  setInterval(() => {
+  function updateView() {
     [1, 2].forEach(id => {
-      if (podStatus[id].healthy) {
-        podStatus[id].uptimeSeconds++;
-        const el = document.getElementById(`pod-uptime-${id}`);
-        if (el) el.textContent = formatUptime(podStatus[id].uptimeSeconds);
+      const p = podStatus[id];
+      if (p.healthy) {
+        const elapsedSec = Math.floor((Date.now() - p.startTime) / 1000);
+        const elUptime = document.getElementById(`pod-uptime-${id}`);
+        if (elUptime) elUptime.textContent = formatUptime(elapsedSec);
       }
+      const elTotal = document.getElementById(`pod-total-restarts-${id}`);
+      const elSession = document.getElementById(`pod-session-restarts-${id}`);
+      const elName = document.getElementById(`pod-name-${id}`);
+      if (elTotal) elTotal.textContent = p.totalRestarts;
+      if (elSession) elSession.textContent = p.sessionRestarts;
+      if (elName) elName.textContent = `hugoreis-app-${p.hash}-node${id}`;
     });
-  }, 1000);
+  }
+
+  updateView();
+  setInterval(updateView, 1000);
 
   function logEvent(msg, type = '') {
     const consoleBox = document.getElementById('console-log');
@@ -100,14 +142,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function resetSession() {
     [1, 2].forEach(id => {
       podStatus[id].sessionRestarts = 0;
-      const elSession = document.getElementById(`pod-session-restarts-${id}`);
-      if (elSession) elSession.textContent = '0';
+      localStorage.setItem(`k8s_pod${id}_session`, '0');
     });
-    logEvent(isEn ? "🔄 Session metrics reset. Chaos counters set to 0." : "🔄 Métricas da sessão zeradas. Contadores de falhas locais reiniciados.", "warn");
-  }
-
-  function generatePodHash() {
-    return Math.random().toString(36).substring(2, 7);
+    updateView();
+    logEvent(isEn ? "🔄 Session metrics reset. Chaos counters set to 0." : "🔄 Métricas da sessão zeradas. Contadores locais reiniciados.", "warn");
   }
 
   function killPod(id) {
@@ -116,13 +154,13 @@ document.addEventListener('DOMContentLoaded', () => {
     podStatus[id].totalRestarts++;
     podStatus[id].sessionRestarts++;
 
+    localStorage.setItem(`k8s_pod${id}_total`, podStatus[id].totalRestarts.toString());
+    localStorage.setItem(`k8s_pod${id}_session`, podStatus[id].sessionRestarts.toString());
+
     const card = document.getElementById(`pod-card-${id}`);
     const badge = document.getElementById(`pod-status-${id}`);
     const ready = document.getElementById(`pod-ready-${id}`);
-    const totalRestarts = document.getElementById(`pod-total-restarts-${id}`);
-    const sessionRestarts = document.getElementById(`pod-session-restarts-${id}`);
     const load = document.getElementById(`pod-load-${id}`);
-    const uptime = document.getElementById(`pod-uptime-${id}`);
 
     if (card) card.classList.add('failing');
     if (badge) {
@@ -130,8 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
       badge.textContent = 'Terminating';
     }
     if (ready) ready.textContent = '0/1';
-    if (totalRestarts) totalRestarts.textContent = podStatus[id].totalRestarts;
-    if (sessionRestarts) sessionRestarts.textContent = podStatus[id].sessionRestarts;
     if (load) load.textContent = isEn ? 'Traffic Load: 0% (Drained)' : 'Carga: 0% (Drenado)';
 
     const survivorId = id === 1 ? 2 : 1;
@@ -159,12 +195,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1800);
 
     setTimeout(() => {
+      const newHash = Math.random().toString(36).substring(2, 7);
       podStatus[id].healthy = true;
-      podStatus[id].uptimeSeconds = 1;
-      
-      const newHash = generatePodHash();
-      const nameEl = document.getElementById(`pod-name-${id}`);
-      if (nameEl) nameEl.textContent = `hugoreis-app-${newHash}-node${id}`;
+      podStatus[id].startTime = Date.now();
+      podStatus[id].hash = newHash;
+
+      localStorage.setItem(`k8s_pod${id}_start`, podStatus[id].startTime.toString());
+      localStorage.setItem(`k8s_pod${id}_hash`, newHash);
 
       if (card) card.classList.remove('failing');
       if (badge) {
@@ -172,10 +209,10 @@ document.addEventListener('DOMContentLoaded', () => {
         badge.textContent = 'Running';
       }
       if (ready) ready.textContent = '1/1';
-      if (uptime) uptime.textContent = '1s';
       if (load) load.textContent = isEn ? 'Traffic Load: 50% (Normal)' : 'Carga: 50% (Normal)';
       if (survivorLoad) survivorLoad.textContent = isEn ? 'Traffic Load: 50% (Normal)' : 'Carga: 50% (Normal)';
-      
+
+      updateView();
       logEvent(isEn
         ? `✅ SUCCESS: New replica ready (hugoreis-app-${newHash}-node${id}). Probes passed!`
         : `✅ SUCESSO: Nova réplica ativa (hugoreis-app-${newHash}-node${id}). Probes validados!`, "success");
