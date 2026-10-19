@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hugo Reis | Cloud Architecture & Kubernetes Cockpit</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="style.css?v=2">
+  <script src="app.js?v=2" defer></script>
 </head>
 <body>
   <div class="container">
@@ -46,6 +46,7 @@
           <button class="btn" id="btn-traffic">🌐 Simulate Traffic</button>
           <button class="btn" id="btn-burst">⚡ Traffic Burst</button>
           <button class="btn" id="btn-headers">🔍 Inspect Headers</button>
+          <button class="btn" id="btn-reset" style="background: var(--card-inner); border: 1px solid var(--border); color: var(--text);">🔄 Reset Session</button>
           <button class="btn btn-danger" id="btn-kill-1">💥 Kill Pod 1</button>
           <button class="btn btn-danger" id="btn-kill-2">💥 Kill Pod 2</button>
         </div>
@@ -54,30 +55,30 @@
       <div class="pods-grid">
         <div class="pod-card" id="pod-card-1">
           <div class="pod-title">
-            <span>hugoreis-app-7d9f8-node1</span>
+            <span id="pod-name-1">hugoreis-app-7d9f8-node1</span>
             <span class="pod-badge badge-running" id="pod-status-1">Running</span>
           </div>
           <div class="pod-meta">
             <span><strong>OCI Node:</strong> 10.0.2.23 (Ampere A1)</span>
             <span><strong>IP Address:</strong> 10.244.0.14</span>
             <span><strong>Ready:</strong> <span id="pod-ready-1">1/1</span></span>
-            <span><strong>Restarts:</strong> <span id="pod-restarts-1">0</span></span>
-            <span><strong>Uptime:</strong> 17h 42m</span>
+            <span><strong>Restarts:</strong> Total: <strong id="pod-total-restarts-1">14</strong> | Session: <strong id="pod-session-restarts-1" style="color: var(--accent);">0</strong></span>
+            <span><strong>Uptime:</strong> <span id="pod-uptime-1">17h 42m</span></span>
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted);" id="pod-load-1">Traffic Load: 50% (Normal)</div>
         </div>
 
         <div class="pod-card" id="pod-card-2">
           <div class="pod-title">
-            <span>hugoreis-app-7d9f8-node2</span>
+            <span id="pod-name-2">hugoreis-app-7d9f8-node2</span>
             <span class="pod-badge badge-running" id="pod-status-2">Running</span>
           </div>
           <div class="pod-meta">
             <span><strong>OCI Node:</strong> 10.0.2.89 (Ampere A1)</span>
             <span><strong>IP Address:</strong> 10.244.1.09</span>
             <span><strong>Ready:</strong> <span id="pod-ready-2">1/1</span></span>
-            <span><strong>Restarts:</strong> <span id="pod-restarts-2">0</span></span>
-            <span><strong>Uptime:</strong> 17h 42m</span>
+            <span><strong>Restarts:</strong> Total: <strong id="pod-total-restarts-2">9</strong> | Session: <strong id="pod-session-restarts-2" style="color: var(--accent);">0</strong></span>
+            <span><strong>Uptime:</strong> <span id="pod-uptime-2">17h 42m</span></span>
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted);" id="pod-load-2">Traffic Load: 50% (Normal)</div>
         </div>
@@ -97,7 +98,7 @@
     <div class="specs-grid">
       <div class="spec-card doc-highlight">
         <h3>📚 Architecture Docs & Git</h3>
-        <p>Explore the comprehensive Zero Trust network topology, security audit, and CI/CD pipeline on GitHub.</p>
+        <p>Explore the Zero Trust network topology, security audit, and CI/CD pipeline on GitHub.</p>
         <a href="https://github.com/hnreis/hugoreis-cloud/blob/main/README.md" target="_blank" class="doc-link">📖 View Technical Documentation (EN) &rarr;</a>
       </div>
       <div class="spec-card">
