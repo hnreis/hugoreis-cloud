@@ -1,3 +1,6 @@
+cd /home/hugonoguei/hugoreis-cloud
+
+cat << 'EOF' > README.md
 # Production MultiCloud Architecture & Bilingual SPA
 
 <p align="center">
@@ -57,40 +60,3 @@ flowchart TD
     class CF cloudflare;
     class LB,OKE,IGW,NGW,SGW oci;
     class User edge;
-
-    flowchart LR
-    Dev["👨‍💻 Dev (Hugo)"] -->|"git push origin main"| GH["🐙 GitHub Actions"]
-
-    subgraph CI ["Integração Contínua (CI)"]
-        direction TB
-        Checkout["1. Checkout do Código"]
-        QEMU["2. Configuração QEMU & Buildx"]
-        Build["3. Build Nativo ARM64 (Ampere A1)"]
-        Push["4. Push no OCIR (ord.ocir.io)<br/>• Tag imutável Git SHA<br/>• Tag :latest"]
-        Checkout --> QEMU --> Build --> Push
-    end
-
-    subgraph CD ["Entrega Contínua (CD)"]
-        direction TB
-        Auth["5. Autenticação OCI CLI (API Key)"]
-        Kube["6. Kubeconfig Dinâmico OKE"]
-        Deploy["7. kubectl set image (hugoreis-app)"]
-        Rollout["8. Validação de Saúde (Zero Downtime)"]
-        Auth --> Kube --> Deploy --> Rollout
-    end
-
-    GH --> CI
-    Push --> CD
-    Rollout -->|"Workload Atualizado com Sucesso"| OKE[("☸️ Cluster OKE em Produção")]
-
-    classDef dev fill:#334155,stroke:#94a3b8,color:#fff;
-    classDef gh fill:#2088ff,stroke:#1d4ed8,color:#fff;
-    classDef steps fill:#1e293b,stroke:#38bdf8,stroke-width:1px,color:#f8fafc;
-    classDef prod fill:#059669,stroke:#10b981,stroke-width:2px,color:#fff;
-
-    class Dev dev;
-    class GH gh;
-    class Checkout,QEMU,Build,Push,Auth,Kube,Deploy,Rollout steps;
-    class OKE prod;
-
-    🛡️ Pilares de Segurança & Engenharia (Zero Trust)1. Mascaramento de Origem e Anti-WAF BypassNuvem Laranja (Cloudflare Proxy): O endereço IP real de origem da nuvem permanece oculto. Consultas DNS externas resolvem estritamente os endereços Anycast da Cloudflare.Firewall Perimetral Restritivo: A porta 443 da Sub-rede Pública autoriza exclusivamente conexões originadas dos 15 blocos CIDR oficiais da Cloudflare. Conexões diretas que tentam contornar a borda são descartadas silenciosamente no perímetro.2. Computação em Sub-rede PrivadaOs nós de trabalho do Kubernetes (Ampere A1) não possuem endereços IP públicos atribuídos.A comunicação para atualizações externas do cluster ocorre via NAT Gateway (unidirecional) e os downloads de imagem no OCIR trafegam pela rede interna da Oracle via Service Gateway.⚙️ Especificações TécnicasComponenteTecnologiaConfiguração / DimensionamentoProvedor de NuvemOracle Cloud Infrastructure (OCI)Região us-chicago-1OrquestradorKubernetes (OKE)Versão 1.31 (Control Plane Gerenciado)Nós de ComputaçãoAmpere A1 (ARM64)4 OCPUs, 24 GB RAMBalanceadorOCI Flexible Load BalancerRepasse interno via NodePortBorda / DNS / WAFCloudflareProxy Ativo + TLS 1.3 EstritoCertificados SSLcert-manager + Let's EncryptRenovação automática via DNS-01Pipeline de CI/CDGitHub ActionsCompilação multi-arquitetura e deploy zero downtime👨‍💻 AutorHugo ReisCloud Infrastructure & Network Security EngineerLinkedInPortfólio / Produção
