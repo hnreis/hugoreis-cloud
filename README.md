@@ -62,6 +62,11 @@ flowchart TD
     class LB,OKE,IGW,NGW,SGW oci;
     class User edge;
 ```
+---
+##🚀Automated CI/CD Pipeline (GitHub Actions)
+
+Every release pushed to the main branch undergoes fully automated continuous delivery with zero downtime:
+
 ```mermaid
 flowchart TD
     Dev["👨‍💻 Engineer (Hugo Reis)"] -->|"git push origin main"| GH["🐙 GitHub Actions Pipeline"]
@@ -89,3 +94,35 @@ flowchart TD
     class GH gh;
     class Checkout,QEMU,Build,Push,Auth,Kube,Deploy,Rollout steps;
     class OKE prod;
+```
+---
+##🛡️ Core Engineering & Security Pillars (Zero Trust)
+
+1. Origin Masking & Anti-WAF Bypass
+ - Cloudflare Orange Cloud: The real origin IP of the Oracle Load Balancer is strictly masked. All external DNS queries resolve exclusively to Cloudflare Anycast IP addresses.
+- Perimeter Ingress Firewall: Port 443 on the Public Subnet accepts inbound traffic strictly from Cloudflare's 15 official IPv4 CIDR blocks. Unauthenticated scans or direct-to-IP probing attempts are dropped at the edge.
+
+2. Private Subnet Compute Isolation
+- Kubernetes worker nodes reside in a dedicated private subnet (10.0.2.0/24) without public IP addresses.
+- Outbound traffic uses a dedicated NAT Gateway (unidirectional outbound-only), and container pulls from OCI Registry (OCIR) travel internally across the Oracle network via a Service Gateway.
+---
+##⚙️Technical Specifications
+
+## ⚙️ Technical Specifications
+
+| Component | Technology | Configuration / Sizing |
+| :--- | :--- | :--- |
+| **Cloud Provider** | Oracle Cloud Infrastructure (OCI) | Region: `us-chicago-1` |
+| **Orchestrator** | Kubernetes (OKE) | Version: 1.37 (Managed Control Plane) |
+| **Compute Nodes** | Ampere A1 (ARM64) | 2 OCPUs, 12 GB RAM |
+| **Load Balancer** | OCI Flexible Load Balancer | Internal NodePort routing |
+| **Edge / DNS / WAF** | Cloudflare | Active Proxy + Strict TLS 1.3 |
+| **SSL Certificates** | cert-manager + Let's Encrypt | Automated renewal via DNS-01 |
+| **CI/CD Pipeline** | GitHub Actions | Multi-arch build and zero-downtime deployment |
+
+---
+##👨‍💻 Author
+##Hugo Reis
+Cloud Infrastructure & Network Security Engineer
+- 💼 LinkedIn: linkedin.com/in/hugo-nogueira-dos-reis
+- 🌐 Portfolio: hugoreis.cloud
