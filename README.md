@@ -91,3 +91,10 @@ flowchart TD
     class GH gh;
     class Checkout,QEMU,Build,Push,Auth,Kube,Deploy,Rollout steps;
     class OKE prod;
+```
+---
+##🛡️ Pilares de Segurança & Engenharia (Zero Trust)
+
+1. Mascaramento de Origem e Anti-WAF Bypass
+- Nuvem Laranja (Cloudflare Proxy): O endereço IP real de origem da nuvem permanece oculto. Consultas DNS externas resolvem estritamente os endereços Anycast da Cloudflare.
+- Firewall Perimetral Restritivo: A porta 443 da Sub-rede Pública autoriza exclusivamente conexões originadas dos 15 blocos CIDR oficiais da Cloudflare. Conexões diretas que tentam contornar a borda são descartadas silenciosamente no perímetro.
