@@ -19,6 +19,8 @@
 
 ## 🏛️ Topologia de Arquitetura de Nuvem
 
+O tráfego de usuários não acessa os servidores de computação diretamente. A infraestrutura adota isolamento perimetral em camadas:
+
 ```mermaid
 flowchart TD
     subgraph Edge ["🌐 Camada de Borda & Internet"]
