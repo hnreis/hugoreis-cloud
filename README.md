@@ -93,7 +93,7 @@ flowchart TD
     class OKE prod;
 ```
 ---
-##🛡️ Pilares de Segurança & Engenharia (Zero Trust)
+## 🛡️ Pilares de Segurança & Engenharia (Zero Trust)
 
 1. Mascaramento de Origem e Anti-WAF Bypass
 - Nuvem Laranja (Cloudflare Proxy): O endereço IP real de origem da nuvem permanece oculto. Consultas DNS externas resolvem estritamente os endereços Anycast da Cloudflare.
