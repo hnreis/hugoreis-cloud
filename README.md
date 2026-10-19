@@ -98,3 +98,17 @@ flowchart TD
 1. Mascaramento de Origem e Anti-WAF Bypass
 - Nuvem Laranja (Cloudflare Proxy): O endereço IP real de origem da nuvem permanece oculto. Consultas DNS externas resolvem estritamente os endereços Anycast da Cloudflare.
 - Firewall Perimetral Restritivo: A porta 443 da Sub-rede Pública autoriza exclusivamente conexões originadas dos 15 blocos CIDR oficiais da Cloudflare. Conexões diretas que tentam contornar a borda são descartadas silenciosamente no perímetro.
+
+2. Computação em Sub-rede Privada
+- Os nós de trabalho do Kubernetes (Ampere A1) não possuem endereços IP públicos atribuídos.
+- A comunicação para atualizações externas do cluster ocorre via NAT Gateway (unidirecional) e os downloads de imagem no OCIR trafegam pela rede interna da Oracle via Service Gateway.
+
+---
+## ⚙️ Especificações Técnicas
+
+---
+## 👨‍💻 Autor
+# Hugo Reis
+Cloud Infrastructure & Network Security Engineer
+LinkedIn: https://www.linkedin.com/in/hugo-nogueira-dos-reis/
+Portfólio: https://www.hugoreis.cloud/
