@@ -60,7 +60,7 @@ flowchart TD
 ```
 ---
 
-🚀 Esteira Automatizada de CI/CD (GitHub Actions)
+## 🚀 Esteira Automatizada de CI/CD (GitHub Actions)
 
 A cada integração na branch main, o pipeline executa o ciclo completo de entrega contínua em formato vertical sem intervenção manual:
 
