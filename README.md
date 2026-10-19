@@ -67,6 +67,7 @@ flowchart TD
 <p align="center">
   <img src="./oci-network-topology.png" alt="OCI Network Topology Blueprint" width="800">
 </p>
+
 ---
 ## 🚀 Automated CI/CD Pipeline (GitHub Actions)
 
