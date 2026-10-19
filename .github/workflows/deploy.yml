@@ -1,0 +1,97 @@
+name: CI/CD Pipeline - Build ARM64 & Deploy OKE
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+      - '.gitignore'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    name: Build ARM64 & Deploy to OKE
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Checkout do Codigo-Fonte
+        uses: actions/checkout@v4
+
+      - name: 2. Configurar QEMU (Emulacao Multi-Arch)
+        uses: docker/setup-qemu-action@v3
+
+      - name: 3. Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 4. Autenticar no OCI Registry (OCIR)
+        uses: docker/login-action@v3
+        with:
+          registry: ord.ocir.io
+          username: ${{ secrets.OCI_OCIR_USERNAME }}
+          password: ${{ secrets.OCI_OCIR_AUTH_TOKEN }}
+
+      - name: 5. Compilar e Publicar Imagem ARM64 no OCIR
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: |
+            ord.ocir.io/axmlxl6nbuxb/hugoreis-app:${{ github.sha }}
+            ord.ocir.io/axmlxl6nbuxb/hugoreis-app:latest
+
+      - name: 6. Instalar e Configurar OCI CLI
+        env:
+          OCI_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
+          OCI_USER: ${{ secrets.OCI_USER_OCID }}
+          OCI_FP: ${{ secrets.OCI_FINGERPRINT }}
+          OCI_TENANCY: ${{ secrets.OCI_TENANCY_OCID }}
+          OCI_REGION: ${{ secrets.OCI_REGION }}
+        run: |
+          python3 -m pip install oci-cli --break-system-packages --quiet
+          mkdir -p ~/.oci
+          echo "$OCI_KEY" > ~/.oci/oci_api_key.pem
+          chmod 600 ~/.oci/oci_api_key.pem
+
+          cat << CFG > ~/.oci/config
+          [DEFAULT]
+          user=$OCI_USER
+          fingerprint=$OCI_FP
+          tenancy=$OCI_TENANCY
+          region=$OCI_REGION
+          key_file=~/.oci/oci_api_key.pem
+          CFG
+          chmod 600 ~/.oci/config
+
+      - name: 7. Gerar Kubeconfig do Cluster OKE
+        env:
+          CLUSTER_ID: ${{ secrets.OKE_CLUSTER_OCID }}
+          REGION: ${{ secrets.OCI_REGION }}
+        run: |
+          mkdir -p ~/.kube
+          oci ce cluster create-kubeconfig \
+            --cluster-id "$CLUSTER_ID" \
+            --file ~/.kube/config \
+            --region "$REGION" \
+            --token-version 2.0.0
+          chmod 600 ~/.kube/config
+
+      - name: 8. Executar Rollout no Kubernetes (Zero Downtime)
+        run: |
+          echo "Identificando o nome do container no deployment hugoreis-app..."
+          CONTAINER_NAME=$(kubectl get deployment hugoreis-app -n default -o jsonpath='{.spec.template.spec.containers[0].name}')
+          echo "Container identificado: $CONTAINER_NAME"
+
+          echo "Atualizando a imagem para a tag imutavel ${{ github.sha }}..."
+          kubectl set image deployment/hugoreis-app \
+            "$CONTAINER_NAME=ord.ocir.io/axmlxl6nbuxb/hugoreis-app:${{ github.sha }}" \
+            -n default
+
+          echo "Aguardando estabilizacao do rollout..."
+          kubectl rollout status deployment/hugoreis-app -n default --timeout=180s
+
+          echo "Status dos Pods atualizados:"
+          kubectl get pods -n default -l app=hugoreis-app -o wide
+          echo "✅ Deploy em producao concluido com sucesso!"
