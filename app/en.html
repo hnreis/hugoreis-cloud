@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hugo Reis | Cloud Architecture & Kubernetes Cockpit</title>
-  <link rel="stylesheet" href="style.css?v=2">
-  <script src="app.js?v=2" defer></script>
+  <link rel="stylesheet" href="style.css?v=3">
+  <script src="app.js?v=3" defer></script>
 </head>
 <body>
   <div class="container">
@@ -70,7 +70,7 @@
 
         <div class="pod-card" id="pod-card-2">
           <div class="pod-title">
-            <span id="pod-name-2">hugoreis-app-7d9f8-node2</span>
+            <span id="pod-name-2">hugoreis-app-3c2e1-node2</span>
             <span class="pod-badge badge-running" id="pod-status-2">Running</span>
           </div>
           <div class="pod-meta">
@@ -96,10 +96,11 @@
     </section>
 
     <div class="specs-grid">
+      <!-- Row 1 of 4 Cards -->
       <div class="spec-card doc-highlight">
         <h3>📚 Architecture Docs & Git</h3>
         <p>Explore the Zero Trust network topology, security audit, and CI/CD pipeline on GitHub.</p>
-        <a href="https://github.com/hnreis/hugoreis-cloud/blob/main/README.md" target="_blank" class="doc-link">📖 View Technical Documentation (EN) &rarr;</a>
+        <a href="https://github.com/hnreis/hugoreis-cloud/blob/main/README.md" target="_blank" class="doc-link">📖 View Docs (EN) &rarr;</a>
       </div>
       <div class="spec-card">
         <h3>🛡️ Edge & Zero Trust</h3>
@@ -113,9 +114,23 @@
         <h3>🚀 CI/CD Pipeline</h3>
         <p>GitHub Actions automated ARM64 native build and zero-downtime rolling updates.</p>
       </div>
+
+      <!-- Row 2 of 4 Cards -->
       <div class="spec-card">
         <h3>💰 Always Free FinOps</h3>
         <p>Sustainable cloud infrastructure fully operated under Oracle Cloud Always Free allowances.</p>
+      </div>
+      <div class="spec-card">
+        <h3>🔐 Automated TLS (cert-manager)</h3>
+        <p>Automated Let's Encrypt certificate issuance using DNS-01 challenges via Cloudflare API.</p>
+      </div>
+      <div class="spec-card">
+        <h3>📦 Service Gateway & OCIR</h3>
+        <p>Container images pulled privately through Oracle backbone network without touching the internet.</p>
+      </div>
+      <div class="spec-card">
+        <h3>⚡ ARM64 Compute (Ampere A1)</h3>
+        <p>High compute density powered by ARM architecture with native multi-arch Docker image builds.</p>
       </div>
     </div>
 
