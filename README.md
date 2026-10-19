@@ -96,7 +96,7 @@ flowchart TD
     class OKE prod;
 ```
 ---
-##🛡️ Core Engineering & Security Pillars (Zero Trust)
+## 🛡️ Core Engineering & Security Pillars (Zero Trust)
 
 1. Origin Masking & Anti-WAF Bypass
  - Cloudflare Orange Cloud: The real origin IP of the Oracle Load Balancer is strictly masked. All external DNS queries resolve exclusively to Cloudflare Anycast IP addresses.
@@ -106,7 +106,7 @@ flowchart TD
 - Kubernetes worker nodes reside in a dedicated private subnet (10.0.2.0/24) without public IP addresses.
 - Outbound traffic uses a dedicated NAT Gateway (unidirectional outbound-only), and container pulls from OCI Registry (OCIR) travel internally across the Oracle network via a Service Gateway.
 ---
-##⚙️Technical Specifications
+## ⚙️ Technical Specifications
 
 | Component | Technology | Configuration / Sizing |
 | :--- | :--- | :--- |
@@ -119,8 +119,8 @@ flowchart TD
 | **CI/CD Pipeline** | GitHub Actions | Multi-arch build and zero-downtime deployment |
 
 ---
-##👨‍💻 Author
-##Hugo Reis
+## 👨‍💻 Author
+## Hugo Reis
 Cloud Infrastructure & Network Security Engineer
 - 💼 LinkedIn: linkedin.com/in/hugo-nogueira-dos-reis
 - 🌐 Portfolio: hugoreis.cloud
