@@ -55,3 +55,37 @@ flowchart TD
     class CF cloudflare;
     class LB,OKE,IGW,NGW,SGW oci;
     class User edge;
+flowchart LR
+    Dev["👨‍💻 Dev (Hugo)"] -->|"git push origin main"| GH["🐙 GitHub Actions"]
+
+    subgraph CI ["Integração Contínua (CI)"]
+        direction TB
+        Checkout["1. Checkout do Código"]
+        QEMU["2. Configuração QEMU & Buildx"]
+        Build["3. Build Nativo ARM64 (Ampere A1)"]
+        Push["4. Push no OCIR (ord.ocir.io)<br/>• Tag imutável Git SHA<br/>• Tag :latest"]
+        Checkout --> QEMU --> Build --> Push
+    end
+
+    subgraph CD ["Entrega Contínua (CD)"]
+        direction TB
+        Auth["5. Autenticação OCI CLI (API Key)"]
+        Kube["6. Kubeconfig Dinâmico OKE"]
+        Deploy["7. kubectl set image (hugoreis-app)"]
+        Rollout["8. Validação de Saúde (Zero Downtime)"]
+        Auth --> Kube --> Deploy --> Rollout
+    end
+
+    GH --> CI
+    Push --> CD
+    Rollout -->|"Workload Atualizado com Sucesso"| OKE[("☸️ Cluster OKE em Produção")]
+
+    classDef dev fill:#334155,stroke:#94a3b8,color:#fff;
+    classDef gh fill:#2088ff,stroke:#1d4ed8,color:#fff;
+    classDef steps fill:#1e293b,stroke:#38bdf8,stroke-width:1px,color:#f8fafc;
+    classDef prod fill:#059669,stroke:#10b981,stroke-width:2px,color:#fff;
+
+    class Dev dev;
+    class GH gh;
+    class Checkout,QEMU,Build,Push,Auth,Kube,Deploy,Rollout steps;
+    class OKE prod;
