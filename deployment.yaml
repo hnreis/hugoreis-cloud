@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hugoreis-app
+  labels:
+    app: hugoreis-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hugoreis-app
+  template:
+    metadata:
+      labels:
+        app: hugoreis-app
+    spec:
+      containers:
+      - name: hugoreis-app
+        image: ord.ocir.io/axmlxl6nbuxb/hugoreis-app:v1.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"

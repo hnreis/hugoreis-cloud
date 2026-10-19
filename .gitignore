@@ -1,0 +1,14 @@
+# Arquivos temporários e dumps de CLI
+*.json
+*.log
+audit_rules.sh
+backup_*
+
+# Chaves criptográficas e certificados locais
+*.key
+*.pem
+*.crt
+
+# Arquivos de sistema e buffers
+.DS_Store
+Thumbs.db

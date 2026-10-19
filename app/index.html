@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hugo Reis | Cloud Architect & DevOps</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem 1rem; }
+    .container { max-width: 900px; margin: 0 auto; }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    h1 { font-size: 1.8rem; color: var(--accent); }
+    .lang-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .lang-btn:hover { border-color: var(--accent); }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    h2 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--accent); }
+    ul { list-style-position: inside; color: var(--text-muted); }
+    li { margin-bottom: 0.5rem; }
+    .badge { display: inline-block; background: #0369a1; color: #fff; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-right: 0.5rem; }
+    footer { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Hugo Reis</h1>
+        <p id="role-title" style="color: var(--text-muted);">Cloud Solutions Architect & DevOps Engineer</p>
+      </div>
+      <button class="lang-btn" onclick="toggleLanguage()" id="lang-btn">Switch to EN</button>
+    </header>
+
+    <section class="card">
+      <h2 id="about-title">Sobre a Infraestrutura</h2>
+      <p id="about-desc">
+        Esta aplicação está hospedada em um cluster gerenciado Kubernetes (OKE) na Oracle Cloud Infrastructure (OCI), operando sob uma topologia regional de alta disponibilidade com divisão estrita entre sub-redes públicas e privadas.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2 id="arch-title">Especificações de Engenharia</h2>
+      <ul>
+        <li><span class="badge">Networking</span> <span id="spec-net">VCN com roteamento regional, Internet Gateway, NAT Gateway e Service Gateway.</span></li>
+        <li><span class="badge">Security</span> <span id="spec-sec">Zero Trust com Network Security Groups (NSGs) isolando a borda dos nós de computação.</span></li>
+        <li><span class="badge">Compute</span> <span id="spec-compute">Worker Nodes Ampere A1 (ARM64) com OKE gerenciado.</span></li>
+        <li><span class="badge">FinOps</span> <span id="spec-finops">Arquitetura 100% elegível aos recursos Always Free com orçamento e alertas ativos.</span></li>
+      </ul>
+    </section>
+
+    <footer>
+      <p>hugoreis.cloud &bull; OCI Production Environment</p>
+    </footer>
+  </div>
+
+  <script>
+    let currentLang = 'pt';
+    const content = {
+      pt: {
+        role: "Cloud Solutions Architect & DevOps Engineer",
+        btn: "Switch to EN",
+        aboutTitle: "Sobre a Infraestrutura",
+        aboutDesc: "Esta aplicação está hospedada em um cluster gerenciado Kubernetes (OKE) na Oracle Cloud Infrastructure (OCI), operando sob uma topologia regional de alta disponibilidade com divisão estrita entre sub-redes públicas e privadas.",
+        archTitle: "Especificações de Engenharia",
+        specNet: "VCN com roteamento regional, Internet Gateway, NAT Gateway e Service Gateway.",
+        specSec: "Zero Trust com Network Security Groups (NSGs) isolando a borda dos nós de computação.",
+        specCompute: "Worker Nodes Ampere A1 (ARM64) com OKE gerenciado.",
+        specFinops: "Arquitetura 100% elegível aos recursos Always Free com orçamento e alertas ativos."
+      },
+      en: {
+        role: "Cloud Solutions Architect & DevOps Engineer",
+        btn: "Mudar para PT",
+        aboutTitle: "About the Infrastructure",
+        aboutDesc: "This application is hosted on a managed Kubernetes cluster (OKE) on Oracle Cloud Infrastructure (OCI), running under a high-availability regional topology with strict separation between public and private subnets.",
+        archTitle: "Engineering Specifications",
+        specNet: "VCN with regional routing, Internet Gateway, NAT Gateway, and Service Gateway.",
+        specSec: "Zero Trust model with Network Security Groups (NSGs) isolating edge from compute nodes.",
+        specCompute: "Ampere A1 (ARM64) Worker Nodes managed via OKE.",
+        specFinops: "100% Always Free eligible architecture with active billing governance and alerts."
+      }
+    };
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'pt' ? 'en' : 'pt';
+      const t = content[currentLang];
+      document.getElementById('role-title').innerText = t.role;
+      document.getElementById('lang-btn').innerText = t.btn;
+      document.getElementById('about-title').innerText = t.aboutTitle;
+      document.getElementById('about-desc').innerText = t.aboutDesc;
+      document.getElementById('arch-title').innerText = t.archTitle;
+      document.getElementById('spec-net').innerText = t.specNet;
+      document.getElementById('spec-sec').innerText = t.specSec;
+      document.getElementById('spec-compute').innerText = t.specCompute;
+      document.getElementById('spec-finops').innerText = t.specFinops;
+      document.documentElement.lang = currentLang === 'pt' ? 'pt-BR' : 'en-US';
+    }
+  </script>
+</body>
+</html>
