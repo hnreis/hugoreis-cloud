@@ -2,14 +2,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const isEn = document.documentElement.lang.startsWith('en');
 
   let podStatus = {
-    1: { state: 'Running', restarts: 0, healthy: true, uptimeSeconds: 63720 },
-    2: { state: 'Running', restarts: 0, healthy: true, uptimeSeconds: 63720 }
+    1: { state: 'Running', totalRestarts: 14, sessionRestarts: 0, healthy: true, uptimeSeconds: 63720 },
+    2: { state: 'Running', totalRestarts: 9, sessionRestarts: 0, healthy: true, uptimeSeconds: 63720 }
   };
   let nextTarget = 1;
 
   const btnTraffic = document.getElementById('btn-traffic');
   const btnBurst = document.getElementById('btn-burst');
   const btnHeaders = document.getElementById('btn-headers');
+  const btnReset = document.getElementById('btn-reset');
   const btnKill1 = document.getElementById('btn-kill-1');
   const btnKill2 = document.getElementById('btn-kill-2');
 
@@ -17,12 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
     const s = seconds % 60;
-    if (h > 0) return `${h}h ${m}m`;
+    if (h > 0) return `${h}h ${m}m ${s}s`;
     if (m > 0) return `${m}m ${s}s`;
     return `${s}s`;
   }
 
-  // Atualiza contadores de tempo ativo
+  // Incrementa o tempo ativo segundo a segundo
   setInterval(() => {
     [1, 2].forEach(id => {
       if (podStatus[id].healthy) {
@@ -60,10 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const podCard = document.getElementById(`pod-card-${targetPod}`);
     if (podCard) {
       podCard.classList.add('highlight');
-      setTimeout(() => podCard.classList.remove('highlight'), 350);
+      setTimeout(() => podCard.classList.remove('highlight'), 300);
     }
 
-    const latency = Math.floor(Math.random() * 12) + 14;
+    const latency = Math.floor(Math.random() * 10) + 12;
     if (showLog) {
       const msg = isEn 
         ? `HTTP/2 GET 200 OK -> Routed via LB to Pod ${targetPod} (${latency}ms)`
@@ -93,7 +94,16 @@ document.addEventListener('DOMContentLoaded', () => {
     logEvent("content-security-policy: default-src 'none'; style-src 'self'; script-src 'self'");
     logEvent("x-content-type-options: nosniff");
     logEvent("x-frame-options: DENY");
-    logEvent(isEn ? "🛡️ Verified: Origin IP masked & Mozilla Observatory A+ compliant." : "🛡️ Verificado: IP de origem protegido & A+ Mozilla Observatory ativo.", "success");
+    logEvent(isEn ? "🛡️ Verified: Origin IP masked & Mozilla Observatory A+ compliant." : "🛡️ Verificado: IP de origem mascarado & A+ Mozilla Observatory ativo.", "success");
+  }
+
+  function resetSession() {
+    [1, 2].forEach(id => {
+      podStatus[id].sessionRestarts = 0;
+      const elSession = document.getElementById(`pod-session-restarts-${id}`);
+      if (elSession) elSession.textContent = '0';
+    });
+    logEvent(isEn ? "🔄 Session metrics reset. Chaos counters set to 0." : "🔄 Métricas da sessão zeradas. Contadores de falhas locais reiniciados.", "warn");
   }
 
   function generatePodHash() {
@@ -103,12 +113,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function killPod(id) {
     if (!podStatus[id].healthy) return;
     podStatus[id].healthy = false;
-    podStatus[id].restarts++;
+    podStatus[id].totalRestarts++;
+    podStatus[id].sessionRestarts++;
 
     const card = document.getElementById(`pod-card-${id}`);
     const badge = document.getElementById(`pod-status-${id}`);
     const ready = document.getElementById(`pod-ready-${id}`);
-    const restarts = document.getElementById(`pod-restarts-${id}`);
+    const totalRestarts = document.getElementById(`pod-total-restarts-${id}`);
+    const sessionRestarts = document.getElementById(`pod-session-restarts-${id}`);
     const load = document.getElementById(`pod-load-${id}`);
     const uptime = document.getElementById(`pod-uptime-${id}`);
 
@@ -118,7 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
       badge.textContent = 'Terminating';
     }
     if (ready) ready.textContent = '0/1';
-    if (restarts) restarts.textContent = podStatus[id].restarts;
+    if (totalRestarts) totalRestarts.textContent = podStatus[id].totalRestarts;
+    if (sessionRestarts) sessionRestarts.textContent = podStatus[id].sessionRestarts;
     if (load) load.textContent = isEn ? 'Traffic Load: 0% (Drained)' : 'Carga: 0% (Drenado)';
 
     const survivorId = id === 1 ? 2 : 1;
@@ -147,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {
       podStatus[id].healthy = true;
-      podStatus[id].uptimeSeconds = 0; // Reseta o tempo ativo para 0s
+      podStatus[id].uptimeSeconds = 1;
       
       const newHash = generatePodHash();
       const nameEl = document.getElementById(`pod-name-${id}`);
@@ -164,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (survivorLoad) survivorLoad.textContent = isEn ? 'Traffic Load: 50% (Normal)' : 'Carga: 50% (Normal)';
       
       logEvent(isEn
-        ? `✅ SUCCESS: New Pod replica ready (hugoreis-app-${newHash}-node${id}). Probes passed!`
+        ? `✅ SUCCESS: New replica ready (hugoreis-app-${newHash}-node${id}). Probes passed!`
         : `✅ SUCESSO: Nova réplica ativa (hugoreis-app-${newHash}-node${id}). Probes validados!`, "success");
     }, 4200);
   }
@@ -172,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnTraffic) btnTraffic.addEventListener('click', () => simulateTraffic(true));
   if (btnBurst) btnBurst.addEventListener('click', triggerBurst);
   if (btnHeaders) btnHeaders.addEventListener('click', inspectHeaders);
+  if (btnReset) btnReset.addEventListener('click', resetSession);
   if (btnKill1) btnKill1.addEventListener('click', () => killPod(1));
   if (btnKill2) btnKill2.addEventListener('click', () => killPod(2));
 });
