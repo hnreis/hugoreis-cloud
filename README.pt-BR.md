@@ -61,3 +61,34 @@ flowchart TD
     class CF cloudflare;
     class LB,OKE,IGW,NGW,SGW oci;
     class User edge;
+```
+---
+## 🚀 Esteira Automatizada de CI/CD (GitHub Actions)
+A cada commit enviado para a branch main, a esteira executa o ciclo completo de entrega contínua sem tempo de inatividade (Zero Downtime):
+```mermaid
+flowchart TD
+    Dev["👨‍💻 Engenheiro (Hugo Reis)"] -->|"git push origin main"| GH["🐙 GitHub Actions Pipeline"]
+
+    subgraph CI ["Integração Contínua (CI)"]
+        direction TB
+        Checkout["1. Checkout do Código-Fonte"] --> QEMU["2. Configuração QEMU & Docker Buildx"] --> Build["3. Compilação Nativa ARM64 (Ampere A1)"] --> Push["4. Publicação no OCI Registry (ord.ocir.io)<br/>• Tag Imutável Git SHA<br/>• Tag :latest"]
+    end
+
+    subgraph CD ["Entrega Contínua (CD)"]
+        direction TB
+        Auth["5. Autenticação OCI CLI (Chave de API)"] --> Kube["6. Kubeconfig Dinâmico do OKE"] --> Deploy["7. kubectl set image (hugoreis-app)"] --> Rollout["8. Checagem de Saúde & Validação Zero Downtime"]
+    end
+
+    GH --> CI
+    CI --> CD
+    CD -->|"Carga de Trabalho Atualizada com Sucesso"| OKE[("☸️ Cluster OKE em Produção")]
+
+    classDef dev fill:#334155,stroke:#94a3b8,color:#fff;
+    classDef gh fill:#2088ff,stroke:#1d4ed8,color:#fff;
+    classDef steps fill:#1e293b,stroke:#38bdf8,stroke-width:1px,color:#f8fafc;
+    classDef prod fill:#059669,stroke:#10b981,stroke-width:2px,color:#fff;
+
+    class Dev dev;
+    class GH gh;
+    class Checkout,QEMU,Build,Push,Auth,Kube,Deploy,Rollout steps;
+    class OKE prod;
