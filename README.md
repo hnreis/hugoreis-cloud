@@ -63,6 +63,11 @@ flowchart TD
     class User edge;
 ```
 ---
+### 📐 Detailed Network Blueprint & Security Boundaries
+<p align="center">
+  <img src="./oci-network-topology.png" alt="OCI Network Topology Blueprint" width="800">
+</p>
+---
 ## 🚀 Automated CI/CD Pipeline (GitHub Actions)
 
 Every release pushed to the main branch undergoes fully automated continuous delivery with zero downtime:
