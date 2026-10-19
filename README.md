@@ -1,6 +1,3 @@
-cd /home/hugonoguei/hugoreis-cloud
-
-cat << 'EOF' > README.md
 # Production MultiCloud Architecture & Bilingual SPA
 
 <p align="center">
