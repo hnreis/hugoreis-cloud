@@ -106,9 +106,19 @@ flowchart TD
 ---
 ## ⚙️ Especificações Técnicas
 
+| Componente | Tecnologia | Configuração / Dimensionamento |
+| :--- | :--- | :--- |
+| **Provedor de Nuvem** | Oracle Cloud Infrastructure (OCI) | Região `us-chicago-1` |
+| **Orquestrador** | Kubernetes (OKE) | Versão 1.31 (Control Plane Gerenciado) |
+| **Nós de Computação** | Ampere A1 (ARM64) | 4 OCPUs, 24 GB RAM |
+| **Balanceador** | OCI Flexible Load Balancer | Repasse interno via NodePort |
+| **Borda / DNS / WAF** | Cloudflare | Proxy Ativo + TLS 1.3 Estrito |
+| **Certificados SSL** | cert-manager + Let's Encrypt | Renovação automática via DNS-01 |
+| **Pipeline de CI/CD** | GitHub Actions | Compilação multi-arquitetura e deploy zero downtime |
+
 ---
 ## 👨‍💻 Autor
-Hugo Reis
+- Hugo Reis
 - Cloud Infrastructure & Network Security Engineer
 - LinkedIn: https://www.linkedin.com/in/hugo-nogueira-dos-reis/
 - Portfólio: https://www.hugoreis.cloud/
