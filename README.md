@@ -59,30 +59,22 @@ flowchart TD
     class User edge;
 ```
 ```mermaid
-flowchart LR
+flowchart TD
     Dev["👨‍💻 Dev (Hugo)"] -->|"git push origin main"| GH["🐙 GitHub Actions"]
 
     subgraph CI ["Integração Contínua (CI)"]
         direction TB
-        Checkout["1. Checkout do Código"]
-        QEMU["2. Configuração QEMU & Buildx"]
-        Build["3. Build Nativo ARM64 (Ampere A1)"]
-        Push["4. Push no OCIR (ord.ocir.io)<br/>• Tag imutável Git SHA<br/>• Tag :latest"]
-        Checkout --> QEMU --> Build --> Push
+        Checkout["1. Checkout do Código"] --> QEMU["2. Configuração QEMU & Buildx"] --> Build["3. Build Nativo ARM64 (Ampere A1)"] --> Push["4. Push no OCIR (ord.ocir.io)<br/>• Tag Git SHA<br/>• Tag :latest"]
     end
 
     subgraph CD ["Entrega Contínua (CD)"]
         direction TB
-        Auth["5. Autenticação OCI CLI (API Key)"]
-        Kube["6. Kubeconfig Dinâmico OKE"]
-        Deploy["7. kubectl set image (hugoreis-app)"]
-        Rollout["8. Validação de Saúde (Zero Downtime)"]
-        Auth --> Kube --> Deploy --> Rollout
+        Auth["5. Autenticação OCI CLI"] --> Kube["6. Kubeconfig Dinâmico OKE"] --> Deploy["7. kubectl set image (hugoreis-app)"] --> Rollout["8. Validação de Saúde (Zero Downtime)"]
     end
 
     GH --> CI
-    Push --> CD
-    Rollout -->|"Workload Atualizado com Sucesso"| OKE[("☸️ Cluster OKE em Produção")]
+    CI --> CD
+    CD -->|"Workload Atualizado com Sucesso"| OKE[("☸️ Cluster OKE em Produção")]
 
     classDef dev fill:#334155,stroke:#94a3b8,color:#fff;
     classDef gh fill:#2088ff,stroke:#1d4ed8,color:#fff;
