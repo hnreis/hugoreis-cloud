@@ -63,8 +63,7 @@ flowchart TD
     class User edge;
 ```
 ---
-
-##🚀Automated CI/CD Pipeline (GitHub Actions)
+## 🚀 Automated CI/CD Pipeline (GitHub Actions)
 
 Every release pushed to the main branch undergoes fully automated continuous delivery with zero downtime:
 
