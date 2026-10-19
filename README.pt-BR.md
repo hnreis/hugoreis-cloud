@@ -67,8 +67,10 @@ flowchart TD
 <p align="center">
   <img src="./oci-network-topology.png" alt="Blueprint da Topologia de Rede OCI" width="800">
 </p>
+
 ---
 ## 🚀Esteira Automatizada de CI/CD (GitHub Actions)
+
 A cada commit enviado para a branch main, a esteira executa o ciclo completo de entrega contínua sem tempo de inatividade (Zero Downtime):
 
 ```mermaid
