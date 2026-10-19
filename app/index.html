@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hugo Reis | Cloud Architecture & Kubernetes Cockpit</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="style.css?v=2">
+  <script src="app.js?v=2" defer></script>
 </head>
 <body>
   <div class="container">
@@ -46,6 +46,7 @@
           <button class="btn" id="btn-traffic">🌐 Simular Tráfego</button>
           <button class="btn" id="btn-burst">⚡ Rajada (10 Req)</button>
           <button class="btn" id="btn-headers">🔍 Inspecionar Headers</button>
+          <button class="btn" id="btn-reset" style="background: var(--card-inner); border: 1px solid var(--border); color: var(--text);">🔄 Resetar Sessão</button>
           <button class="btn btn-danger" id="btn-kill-1">💥 Matar Pod 1</button>
           <button class="btn btn-danger" id="btn-kill-2">💥 Matar Pod 2</button>
         </div>
@@ -54,30 +55,30 @@
       <div class="pods-grid">
         <div class="pod-card" id="pod-card-1">
           <div class="pod-title">
-            <span>hugoreis-app-7d9f8-node1</span>
+            <span id="pod-name-1">hugoreis-app-7d9f8-node1</span>
             <span class="pod-badge badge-running" id="pod-status-1">Running</span>
           </div>
           <div class="pod-meta">
             <span><strong>Nó OCI:</strong> 10.0.2.23 (Ampere A1)</span>
             <span><strong>Endereço IP:</strong> 10.244.0.14</span>
-            <span><strong>Prontidão (Ready):</strong> <span id="pod-ready-1">1/1</span></span>
-            <span><strong>Reinícios (Restarts):</strong> <span id="pod-restarts-1">0</span></span>
-            <span><strong>Tempo Ativo:</strong> 17h 42m</span>
+            <span><strong>Prontidão:</strong> <span id="pod-ready-1">1/1</span></span>
+            <span><strong>Reinícios:</strong> Total: <strong id="pod-total-restarts-1">14</strong> | Sessão: <strong id="pod-session-restarts-1" style="color: var(--accent);">0</strong></span>
+            <span><strong>Tempo Ativo:</strong> <span id="pod-uptime-1">17h 42m</span></span>
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted);" id="pod-load-1">Carga de Tráfego: 50% (Normal)</div>
         </div>
 
         <div class="pod-card" id="pod-card-2">
           <div class="pod-title">
-            <span>hugoreis-app-7d9f8-node2</span>
+            <span id="pod-name-2">hugoreis-app-7d9f8-node2</span>
             <span class="pod-badge badge-running" id="pod-status-2">Running</span>
           </div>
           <div class="pod-meta">
             <span><strong>Nó OCI:</strong> 10.0.2.89 (Ampere A1)</span>
             <span><strong>Endereço IP:</strong> 10.244.1.09</span>
-            <span><strong>Prontidão (Ready):</strong> <span id="pod-ready-2">1/1</span></span>
-            <span><strong>Reinícios (Restarts):</strong> <span id="pod-restarts-2">0</span></span>
-            <span><strong>Tempo Ativo:</strong> 17h 42m</span>
+            <span><strong>Prontidão:</strong> <span id="pod-ready-2">1/1</span></span>
+            <span><strong>Reinícios:</strong> Total: <strong id="pod-total-restarts-2">9</strong> | Sessão: <strong id="pod-session-restarts-2" style="color: var(--accent);">0</strong></span>
+            <span><strong>Tempo Ativo:</strong> <span id="pod-uptime-2">17h 42m</span></span>
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted);" id="pod-load-2">Carga de Tráfego: 50% (Normal)</div>
         </div>
@@ -97,7 +98,7 @@
     <div class="specs-grid">
       <div class="spec-card doc-highlight">
         <h3>📚 Documentação & Git</h3>
-        <p>Conheça a topologia completa de rede, políticas Zero Trust e automação de CI/CD documentadas no repositório.</p>
+        <p>Conheça a topologia de rede, políticas Zero Trust e automação de CI/CD documentadas no repositório.</p>
         <a href="https://github.com/hnreis/hugoreis-cloud/blob/main/README.pt-BR.md" target="_blank" class="doc-link">📖 Ver Documentação Técnica (PT-BR) &rarr;</a>
       </div>
       <div class="spec-card">
