@@ -64,7 +64,7 @@ flowchart TD
 ```
 ### 📐 Blueprint Esquemático de Rede & Fronteiras de Segurança
 <p align="center">
-  <img src="docs/oci-network-topology.png" alt="Blueprint da Topologia de Rede OCI" width="800">
+  <img src="./oci-network-topology.png" alt="Blueprint da Topologia de Rede OCI" width="800">
 </p>
 ---
 ## 🚀 Esteira Automatizada de CI/CD (GitHub Actions)
