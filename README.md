@@ -108,13 +108,11 @@ flowchart TD
 ---
 ##⚙️Technical Specifications
 
-## ⚙️ Technical Specifications
-
 | Component | Technology | Configuration / Sizing |
 | :--- | :--- | :--- |
 | **Cloud Provider** | Oracle Cloud Infrastructure (OCI) | Region: `us-chicago-1` |
 | **Orchestrator** | Kubernetes (OKE) | Version: 1.37 (Managed Control Plane) |
-| **Compute Nodes** | Ampere A1 (ARM64) | 2 OCPUs, 12 GB RAM |
+| **Compute Nodes** | Ampere A1 (ARM64) | 2 Nodes (1 OCPU, 6 GB RAM each — 2 OCPUs / 12 GB RAM total) |
 | **Load Balancer** | OCI Flexible Load Balancer | Internal NodePort routing |
 | **Edge / DNS / WAF** | Cloudflare | Active Proxy + Strict TLS 1.3 |
 | **SSL Certificates** | cert-manager + Let's Encrypt | Automated renewal via DNS-01 |
