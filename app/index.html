@@ -3,102 +3,341 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hugo Reis | Cloud Architect & DevOps</title>
+  <title>Hugo Reis | Cloud Architecture & Kubernetes Cockpit</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-inner: #1a253f;
+      --border: #283759;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
       --text: #f8fafc;
       --text-muted: #94a3b8;
-      --accent: #38bdf8;
-      --border: #334155;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem 1rem; }
-    .container { max-width: 900px; margin: 0 auto; }
-    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 2rem; }
-    h1 { font-size: 1.8rem; color: var(--accent); }
-    .lang-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    body { background-color: var(--bg); color: var(--text); line-height: 1.6; padding: 1.5rem 1rem; }
+    .container { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
+
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 1.2rem; }
+    .brand h1 { font-size: 1.6rem; color: var(--accent); letter-spacing: -0.02em; }
+    .brand p { color: var(--text-muted); font-size: 0.9rem; }
+    .lang-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
     .lang-btn:hover { border-color: var(--accent); }
-    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
-    h2 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--accent); }
-    ul { list-style-position: inside; color: var(--text-muted); }
-    li { margin-bottom: 0.5rem; }
-    .badge { display: inline-block; background: #0369a1; color: #fff; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-right: 0.5rem; }
-    footer { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
+
+    .telemetry-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .telemetry-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+    .telemetry-label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; }
+    .telemetry-val { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-top: 0.2rem; display: flex; align-items: center; gap: 0.5rem; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); display: inline-block; box-shadow: 0 0 8px var(--success); }
+
+    .cockpit-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
+    .cockpit-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem; }
+    .cockpit-header h2 { font-size: 1.25rem; color: var(--accent); display: flex; align-items: center; gap: 0.5rem; }
+
+    .actions-bar { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .btn { background: var(--accent); color: #090d16; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: opacity 0.2s; }
+    .btn:hover { opacity: 0.9; }
+    .btn-danger { background: rgba(239, 68, 68, 0.2); border: 1px solid var(--danger); color: var(--danger); }
+    .btn-danger:hover { background: var(--danger); color: #fff; }
+
+    .pods-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+    .pod-card { background: var(--card-inner); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; position: relative; transition: all 0.3s ease; }
+    .pod-card.highlight { border-color: var(--accent); box-shadow: 0 0 12px rgba(56, 189, 248, 0.3); }
+    .pod-card.failing { border-color: var(--danger); opacity: 0.7; }
+    .pod-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .pod-badge { font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700; }
+    .badge-running { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid var(--success); }
+    .badge-failed { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid var(--danger); }
+    .badge-recovering { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid var(--warning); }
+
+    .pod-meta { font-size: 0.82rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.3rem; margin: 0.8rem 0; }
+    .pod-meta span strong { color: var(--text); }
+
+    .console-box { background: #040711; border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1rem; font-family: monospace; font-size: 0.78rem; max-height: 150px; overflow-y: auto; color: #38bdf8; }
+    .console-line { margin-bottom: 0.3rem; word-break: break-all; }
+    .console-line.warn { color: var(--warning); }
+    .console-line.err { color: var(--danger); }
+    .console-line.success { color: var(--success); }
+
+    .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .spec-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; }
+    .spec-card h3 { font-size: 0.95rem; color: var(--accent); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; }
+    .spec-card p { font-size: 0.82rem; color: var(--text-muted); }
+
+    footer { text-align: center; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 1rem; }
+    footer a { color: var(--accent); text-decoration: none; }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <div>
+      <div class="brand">
         <h1>Hugo Reis</h1>
-        <p id="role-title" style="color: var(--text-muted);">Cloud Solutions Architect & DevOps Engineer</p>
+        <p id="t-role">Cloud Infrastructure & Network Security Engineer</p>
       </div>
       <button class="lang-btn" onclick="toggleLanguage()" id="lang-btn">Switch to EN</button>
     </header>
 
-    <section class="card">
-      <h2 id="about-title">Sobre a Infraestrutura</h2>
-      <p id="about-desc">
-        Esta aplicação está hospedada em um cluster gerenciado Kubernetes (OKE) na Oracle Cloud Infrastructure (OCI), operando sob uma topologia regional de alta disponibilidade com divisão estrita entre sub-redes públicas e privadas.
-      </p>
+    <div class="telemetry-strip">
+      <div class="telemetry-card">
+        <div class="telemetry-label" id="t-edge-lbl">Borda & Segurança</div>
+        <div class="telemetry-val"><span class="status-dot"></span> Cloudflare WAF</div>
+      </div>
+      <div class="telemetry-card">
+        <div class="telemetry-label" id="t-cluster-lbl">Cluster Gerenciado</div>
+        <div class="telemetry-val">OKE v1.37 (ARM64)</div>
+      </div>
+      <div class="telemetry-card">
+        <div class="telemetry-label" id="t-region-lbl">Região Cloud</div>
+        <div class="telemetry-val">us-chicago-1</div>
+      </div>
+      <div class="telemetry-card">
+        <div class="telemetry-label" id="t-routing-lbl">Roteamento Interno</div>
+        <div class="telemetry-val">Zero Trust Subnet</div>
+      </div>
+    </div>
+
+    <section class="cockpit-panel">
+      <div class="cockpit-header">
+        <div>
+          <h2 id="t-cockpit-title">☸️ Cockpit Kubernetes & Engenharia de Caos</h2>
+          <p style="font-size: 0.82rem; color: var(--text-muted);" id="t-cockpit-desc">Simulação de resiliência e auto-recuperação (Self-Healing) das réplicas de produção.</p>
+        </div>
+        <div class="actions-bar">
+          <button class="btn" onclick="simulateTraffic()" id="t-btn-traffic">🌐 Simular Tráfego HTTP</button>
+          <button class="btn btn-danger" onclick="killPod(1)" id="t-btn-kill1">💥 Matar Pod 1</button>
+          <button class="btn btn-danger" onclick="killPod(2)" id="t-btn-kill2">💥 Matar Pod 2</button>
+        </div>
+      </div>
+
+      <div class="pods-grid">
+        <div class="pod-card" id="pod-card-1">
+          <div class="pod-title">
+            <span id="pod-name-1">hugoreis-app-7d9f8-node1</span>
+            <span class="pod-badge badge-running" id="pod-status-1">Running</span>
+          </div>
+          <div class="pod-meta">
+            <span><strong>Nó OCI:</strong> 10.0.2.23 (Ampere A1)</span>
+            <span><strong>Endereço IP:</strong> 10.244.0.14</span>
+            <span><strong>Prontidão (Ready):</strong> <span id="pod-ready-1">1/1</span></span>
+            <span><strong>Reinícios (Restarts):</strong> <span id="pod-restarts-1">0</span></span>
+            <span><strong>Tempo Ativo:</strong> <span id="pod-uptime-1">17h 42m</span></span>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);" id="pod-load-1">Carga de Tráfego: 50% (Normal)</div>
+        </div>
+
+        <div class="pod-card" id="pod-card-2">
+          <div class="pod-title">
+            <span id="pod-name-2">hugoreis-app-7d9f8-node2</span>
+            <span class="pod-badge badge-running" id="pod-status-2">Running</span>
+          </div>
+          <div class="pod-meta">
+            <span><strong>Nó OCI:</strong> 10.0.2.89 (Ampere A1)</span>
+            <span><strong>Endereço IP:</strong> 10.244.1.09</span>
+            <span><strong>Prontidão (Ready):</strong> <span id="pod-ready-2">1/1</span></span>
+            <span><strong>Reinícios (Restarts):</strong> <span id="pod-restarts-2">0</span></span>
+            <span><strong>Tempo Ativo:</strong> <span id="pod-uptime-2">17h 42m</span></span>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);" id="pod-load-2">Carga de Tráfego: 50% (Normal)</div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem;" id="t-events-title">
+          📋 Consola de Eventos do Cluster (Event Stream)
+        </div>
+        <div class="console-box" id="console-log">
+          <div class="console-line success">[ok] Cluster OKE conectado em us-chicago-1. Ingress ativo via Cloudflare.</div>
+          <div class="console-line">[k8s] Deployment hugoreis-app em estado estável (2 réplicas ativas).</div>
+        </div>
+      </div>
     </section>
 
-    <section class="card">
-      <h2 id="arch-title">Especificações de Engenharia</h2>
-      <ul>
-        <li><span class="badge">Networking</span> <span id="spec-net">VCN com roteamento regional, Internet Gateway, NAT Gateway e Service Gateway.</span></li>
-        <li><span class="badge">Security</span> <span id="spec-sec">Zero Trust com Network Security Groups (NSGs) isolando a borda dos nós de computação.</span></li>
-        <li><span class="badge">Compute</span> <span id="spec-compute">Worker Nodes Ampere A1 (ARM64) com OKE gerenciado.</span></li>
-        <li><span class="badge">FinOps</span> <span id="spec-finops">Arquitetura 100% elegível aos recursos Always Free com orçamento e alertas ativos.</span></li>
-      </ul>
-    </section>
+    <div class="specs-grid">
+      <div class="spec-card">
+        <h3 id="t-spec1-title">🛡️ Borda & Zero Trust</h3>
+        <p id="t-spec1-desc">IP público real mascarado pela Cloudflare. Porta 443 restrita aos 15 blocos CIDR oficiais.</p>
+      </div>
+      <div class="spec-card">
+        <h3 id="t-spec2-title">🔒 Sub-rede Privada</h3>
+        <p id="t-spec2-desc">Nós de computação sem IP público. Tráfego de saída controlado via NAT Gateway e Service Gateway.</p>
+      </div>
+      <div class="spec-card">
+        <h3 id="t-spec3-title">🚀 Pipeline CI/CD</h3>
+        <p id="t-spec3-desc">GitHub Actions com compilação nativa ARM64 e implantação automatizada sem tempo de inatividade.</p>
+      </div>
+      <div class="spec-card">
+        <h3 id="t-spec4-title">💰 FinOps Always Free</h3>
+        <p id="t-spec4-desc">Arquitetura sustentável utilizando recursos elegíveis Always Free na Oracle Cloud.</p>
+      </div>
+    </div>
 
     <footer>
-      <p>hugoreis.cloud &bull; OCI Production Environment</p>
+      <p>
+        <strong>Hugo Reis</strong> &bull; 
+        <a href="https://www.linkedin.com/in/hugo-nogueira-dos-reis/" target="_blank">LinkedIn</a> &bull; 
+        <a href="https://github.com/hnreis/hugoreis-cloud" target="_blank">GitHub Repository</a> &bull; 
+        <a href="https://www.hugoreis.cloud">hugoreis.cloud</a>
+      </p>
     </footer>
   </div>
 
   <script>
     let currentLang = 'pt';
-    const content = {
+    let podStatus = {
+      1: { state: 'Running', restarts: 0, healthy: true },
+      2: { state: 'Running', restarts: 0, healthy: true }
+    };
+    let nextTarget = 1;
+
+    const i18n = {
       pt: {
-        role: "Cloud Solutions Architect & DevOps Engineer",
-        btn: "Switch to EN",
-        aboutTitle: "Sobre a Infraestrutura",
-        aboutDesc: "Esta aplicação está hospedada em um cluster gerenciado Kubernetes (OKE) na Oracle Cloud Infrastructure (OCI), operando sob uma topologia regional de alta disponibilidade com divisão estrita entre sub-redes públicas e privadas.",
-        archTitle: "Especificações de Engenharia",
-        specNet: "VCN com roteamento regional, Internet Gateway, NAT Gateway e Service Gateway.",
-        specSec: "Zero Trust com Network Security Groups (NSGs) isolando a borda dos nós de computação.",
-        specCompute: "Worker Nodes Ampere A1 (ARM64) com OKE gerenciado.",
-        specFinops: "Arquitetura 100% elegível aos recursos Always Free com orçamento e alertas ativos."
+        role: "Cloud Infrastructure & Network Security Engineer",
+        langBtn: "Switch to EN",
+        edgeLbl: "Borda & Segurança",
+        clusterLbl: "Cluster Gerenciado",
+        regionLbl: "Região Cloud",
+        routingLbl: "Roteamento Interno",
+        cockpitTitle: "☸️ Cockpit Kubernetes & Engenharia de Caos",
+        cockpitDesc: "Simulação de resiliência e auto-recuperação (Self-Healing) das réplicas de produção.",
+        btnTraffic: "🌐 Simular Tráfego HTTP",
+        btnKill1: "💥 Matar Pod 1",
+        btnKill2: "💥 Matar Pod 2",
+        eventsTitle: "📋 Consola de Eventos do Cluster (Event Stream)",
+        spec1Title: "🛡️ Borda & Zero Trust",
+        spec1Desc: "IP público real mascarado pela Cloudflare. Porta 443 restrita aos 15 blocos CIDR oficiais.",
+        spec2Title: "🔒 Sub-rede Privada",
+        spec2Desc: "Nós de computação sem IP público. Tráfego de saída controlado via NAT Gateway e Service Gateway.",
+        spec3Title: "🚀 Pipeline CI/CD",
+        spec3Desc: "GitHub Actions com compilação nativa ARM64 e implantação automatizada sem tempo de inatividade.",
+        spec4Title: "💰 FinOps Always Free",
+        spec4Desc: "Arquitetura sustentável utilizando recursos elegíveis Always Free na Oracle Cloud."
       },
       en: {
-        role: "Cloud Solutions Architect & DevOps Engineer",
-        btn: "Mudar para PT",
-        aboutTitle: "About the Infrastructure",
-        aboutDesc: "This application is hosted on a managed Kubernetes cluster (OKE) on Oracle Cloud Infrastructure (OCI), running under a high-availability regional topology with strict separation between public and private subnets.",
-        archTitle: "Engineering Specifications",
-        specNet: "VCN with regional routing, Internet Gateway, NAT Gateway, and Service Gateway.",
-        specSec: "Zero Trust model with Network Security Groups (NSGs) isolating edge from compute nodes.",
-        specCompute: "Ampere A1 (ARM64) Worker Nodes managed via OKE.",
-        specFinops: "100% Always Free eligible architecture with active billing governance and alerts."
+        role: "Cloud Infrastructure & Network Security Engineer",
+        langBtn: "Mudar para PT",
+        edgeLbl: "Edge & Security",
+        clusterLbl: "Managed Cluster",
+        regionLbl: "Cloud Region",
+        routingLbl: "Internal Routing",
+        cockpitTitle: "☸️ Kubernetes Cockpit & Chaos Engineering",
+        cockpitDesc: "Live resilience and self-healing simulation of production replicas.",
+        btnTraffic: "🌐 Simulate HTTP Traffic",
+        btnKill1: "💥 Kill Pod 1",
+        btnKill2: "💥 Kill Pod 2",
+        eventsTitle: "📋 Cluster Event Stream Console",
+        spec1Title: "🛡️ Edge & Zero Trust",
+        spec1Desc: "Origin IP masked by Cloudflare. Port 443 restricted strictly to 15 official CIDRs.",
+        spec2Title: "🔒 Private Subnet",
+        spec2Desc: "Worker nodes isolated without public IPs. Secure egress through NAT & Service Gateways.",
+        spec3Title: "🚀 CI/CD Pipeline",
+        spec3Desc: "GitHub Actions multi-arch ARM64 build and zero-downtime rolling update.",
+        spec4Title: "💰 Always Free FinOps",
+        spec4Desc: "Sustainable cloud architecture fully eligible under OCI Always Free allocation."
       }
     };
 
+    function logEvent(msg, type = '') {
+      const consoleBox = document.getElementById('console-log');
+      const time = new Date().toTimeString().split(' ')[0];
+      const div = document.createElement('div');
+      div.className = 'console-line ' + type;
+      div.textContent = `[${time}] ${msg}`;
+      consoleBox.appendChild(div);
+      consoleBox.scrollTop = consoleBox.scrollHeight;
+    }
+
+    function simulateTraffic() {
+      const activePods = [1, 2].filter(id => podStatus[id].healthy);
+      if (activePods.length === 0) {
+        logEvent("ERRO 503 Service Unavailable: Todas as réplicas estão inativas!", "err");
+        return;
+      }
+
+      let targetPod = nextTarget;
+      if (!podStatus[targetPod].healthy) {
+        targetPod = activePods[0];
+      }
+      nextTarget = targetPod === 1 ? 2 : 1;
+
+      const podCard = document.getElementById(`pod-card-${targetPod}`);
+      podCard.classList.add('highlight');
+      setTimeout(() => podCard.classList.remove('highlight'), 400);
+
+      const latency = Math.floor(Math.random() * 12) + 14;
+      logEvent(`HTTP/2 GET 200 OK -> Roteado via LB para Pod ${targetPod} (${latency}ms)`, "success");
+    }
+
+    function killPod(id) {
+      if (!podStatus[id].healthy) return;
+      podStatus[id].healthy = false;
+      podStatus[id].restarts++;
+
+      const card = document.getElementById(`pod-card-${id}`);
+      const badge = document.getElementById(`pod-status-${id}`);
+      const ready = document.getElementById(`pod-ready-${id}`);
+      const restarts = document.getElementById(`pod-restarts-${id}`);
+      const load = document.getElementById(`pod-load-${id}`);
+
+      card.classList.add('failing');
+      badge.className = 'pod-badge badge-failed';
+      badge.textContent = 'Terminating';
+      ready.textContent = '0/1';
+      restarts.textContent = podStatus[id].restarts;
+      load.textContent = 'Carga: 0% (Drenado)';
+
+      const survivorId = id === 1 ? 2 : 1;
+      document.getElementById(`pod-load-${survivorId}`).textContent = 'Carga: 100% (Failover Ativo)';
+
+      logEvent(`⚠️ ALERTA: Sinal SIGTERM enviado ao Pod ${id}. Falha simulada!`, "err");
+      logEvent(`[lb] Tráfego desviado integralmente para o Pod ${survivorId}.`, "warn");
+
+      setTimeout(() => {
+        badge.className = 'pod-badge badge-recovering';
+        badge.textContent = 'ContainerCreating';
+        logEvent(`[k8s] Controlador OKE detetou pod não íntegro. A recriar réplica ${id}...`, "warn");
+      }, 1800);
+
+      setTimeout(() => {
+        podStatus[id].healthy = true;
+        card.classList.remove('failing');
+        badge.className = 'pod-badge badge-running';
+        badge.textContent = 'Running';
+        ready.textContent = '1/1';
+        load.textContent = 'Carga: 50% (Normalizado)';
+        document.getElementById(`pod-load-${survivorId}`).textContent = 'Carga: 50% (Normalizado)';
+        logEvent(`✅ SUCESSO: Pod ${id} recuperado e pronto. Probes de Liveness/Readiness validados!`, "success");
+      }, 4200);
+    }
+
     function toggleLanguage() {
       currentLang = currentLang === 'pt' ? 'en' : 'pt';
-      const t = content[currentLang];
-      document.getElementById('role-title').innerText = t.role;
-      document.getElementById('lang-btn').innerText = t.btn;
-      document.getElementById('about-title').innerText = t.aboutTitle;
-      document.getElementById('about-desc').innerText = t.aboutDesc;
-      document.getElementById('arch-title').innerText = t.archTitle;
-      document.getElementById('spec-net').innerText = t.specNet;
-      document.getElementById('spec-sec').innerText = t.specSec;
-      document.getElementById('spec-compute').innerText = t.specCompute;
-      document.getElementById('spec-finops').innerText = t.specFinops;
+      const t = i18n[currentLang];
+      document.getElementById('t-role').textContent = t.role;
+      document.getElementById('lang-btn').textContent = t.langBtn;
+      document.getElementById('t-edge-lbl').textContent = t.edgeLbl;
+      document.getElementById('t-cluster-lbl').textContent = t.clusterLbl;
+      document.getElementById('t-region-lbl').textContent = t.regionLbl;
+      document.getElementById('t-routing-lbl').textContent = t.routingLbl;
+      document.getElementById('t-cockpit-title').textContent = t.cockpitTitle;
+      document.getElementById('t-cockpit-desc').textContent = t.cockpitDesc;
+      document.getElementById('t-btn-traffic').textContent = t.btnTraffic;
+      document.getElementById('t-btn-kill1').textContent = t.btnKill1;
+      document.getElementById('t-btn-kill2').textContent = t.btnKill2;
+      document.getElementById('t-events-title').textContent = t.eventsTitle;
+      document.getElementById('t-spec1-title').textContent = t.spec1Title;
+      document.getElementById('t-spec1-desc').textContent = t.spec1Desc;
+      document.getElementById('t-spec2-title').textContent = t.spec2Title;
+      document.getElementById('t-spec2-desc').textContent = t.spec2Desc;
+      document.getElementById('t-spec3-title').textContent = t.spec3Title;
+      document.getElementById('t-spec3-desc').textContent = t.spec3Desc;
+      document.getElementById('t-spec4-title').textContent = t.spec4Title;
+      document.getElementById('t-spec4-desc').textContent = t.spec4Desc;
       document.documentElement.lang = currentLang === 'pt' ? 'pt-BR' : 'en-US';
     }
   </script>
