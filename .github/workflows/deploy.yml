@@ -56,16 +56,16 @@ jobs:
           tags: |
             ord.ocir.io/axmlxl6nbuxb/hugoreis-app:${{ github.sha }}
             ord.ocir.io/axmlxl6nbuxb/hugoreis-app:latest
-
+        
        - name: 5.1 [DevSecOps] Container Security & SCA (Trivy Scan)
          uses: aquasecurity/trivy-action@0.28.0
          with:
-          image-ref: 'ord.ocir.io/axmlxl6nbuxb/hugoreis-app:${{ github.sha }}'
-          format: 'table'
-          exit-code: '0'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+           image-ref: 'ord.ocir.io/axmlxl6nbuxb/hugoreis-app:${{ github.sha }}'
+           format: 'table'
+           exit-code: '0'
+           ignore-unfixed: true
+           vuln-type: 'os,library'
+           severity: 'CRITICAL,HIGH'
 
       - name: 6. Instalar e Configurar OCI CLI
         env:
