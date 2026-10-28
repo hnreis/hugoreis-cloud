@@ -66,9 +66,10 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-        env:
-          TRIVY_USERNAME: ${{ secrets.OCI_OCIR_USERNAME }}
-          TRIVY_PASSWORD: ${{ secrets.OCI_OCIR_AUTH_TOKEN }}
+          scan-type: 'image'
+          image-config-scanners: 'config'
+          username: ${{ secrets.OCI_OCIR_USERNAME }}
+          password: ${{ secrets.OCI_OCIR_AUTH_TOKEN }}
 
       - name: 6. Instalar e Configurar OCI CLI
         env:
