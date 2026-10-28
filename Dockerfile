@@ -1,12 +1,12 @@
 FROM docker.io/arm64v8/nginx:alpine
 
-# DevSecOps: Correção cirúrgica de CVEs identificados pelo Trivy
-RUN apk update && apk add --no-cache \
+# DevSecOps: Atualizacao cirurgica forcando upgrade das bibliotecas vulneraveis
+RUN apk update && apk upgrade --no-cache \
     brotli-libs \
     curl \
     libcurl
 
-# Remove página padrão e publica o site estático
+# Remove pagina padrao e publica o site estatico
 RUN rm -rf /usr/share/nginx/html/*
 COPY app/ /usr/share/nginx/html/
 
