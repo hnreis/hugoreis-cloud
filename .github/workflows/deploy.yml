@@ -59,6 +59,10 @@ jobs:
             
       - name: 5.1 [DevSecOps] Container Security & SCA (Trivy Scan)
         uses: aquasecurity/trivy-action@master
+        env:
+          TRIVY_AUTH_URL: "ord.ocir.io"
+          TRIVY_USERNAME: ${{ secrets.OCI_OCIR_USERNAME }}
+          TRIVY_PASSWORD: ${{ secrets.OCI_OCIR_AUTH_TOKEN }}
         with:
           image-ref: 'ord.ocir.io/axmlxl6nbuxb/hugoreis-app:${{ github.sha }}'
           format: 'table'
