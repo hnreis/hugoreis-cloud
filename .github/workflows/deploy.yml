@@ -18,6 +18,12 @@ jobs:
       - name: 1. Checkout do Codigo-Fonte
         uses: actions/checkout@v4
 
+      - name: 1.1 [DevSecOps] Varredura de Segredos (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: false
+
       - name: 2. Configurar QEMU (Emulacao Multi-Arch)
         uses: docker/setup-qemu-action@v3
 
