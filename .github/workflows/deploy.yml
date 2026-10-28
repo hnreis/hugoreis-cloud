@@ -24,6 +24,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: false
 
+        - name: 1.2 [DevSecOps] SAST - Analise Estatica de Codigo (Semgrep)
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+            p/owasp-top-ten
+        continue-on-error: false
+
       - name: 2. Configurar QEMU (Emulacao Multi-Arch)
         uses: docker/setup-qemu-action@v3
 
