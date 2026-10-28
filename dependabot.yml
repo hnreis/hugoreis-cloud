@@ -1,0 +1,11 @@
+version: 2
+updates:
+  # Monitoramento automatizado de imagens e pacotes base do Dockerfile
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "security"
+      - "devsecops"
