@@ -65,14 +65,15 @@ jobs:
           echo "=== 1. Descarregando o binario oficial do Trivy ==="
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
 
-          echo "=== 2. Executando analise de vulnerabilidades e SCA ==="
+          echo "=== 2. Executando analise de vulnerabilidades e SCA (ARM64) ==="
           trivy image \
+            --platform linux/arm64 \
             --format table \
             --exit-code 0 \
             --ignore-unfixed \
-            --vuln-type os,library \
+            --pkg-types os,library \
             --severity CRITICAL,HIGH \
-            ord.ocir.io/axmlxl6nbuxb/hugoreis-app:${{ github.sha }} || true
+            ord.ocir.io/axmlxl6nbuxb/hugoreis-app:${{ github.sha }}
 
       - name: 6. Instalar e Configurar OCI CLI
         env:
