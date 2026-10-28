@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hugoreis-app
+  namespace: default
   labels:
     app: hugoreis-app
 spec:
@@ -16,8 +17,13 @@ spec:
     spec:
       containers:
       - name: hugoreis-app
-        image: ord.ocir.io/axmlxl6nbuxb/hugoreis-app:v1.1
+        image: ord.ocir.io/axmlxl6nbuxb/hugoreis-app:latest
         imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
         ports:
         - containerPort: 80
         resources:
