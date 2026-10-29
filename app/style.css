@@ -81,53 +81,65 @@ header { display: flex; justify-content: space-between; align-items: center; bor
 footer { text-align: center; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 1rem; }
 footer a { color: var(--accent); text-decoration: none; }
 
-/* --- DevSecOps & Security Gates Badges --- */
-.sec-badge {
-  display: inline-flex;
+/* --- Grelha e Cartões de DevSecOps --- */
+.sec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.sec-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.sec-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.sec-card-header {
+  display: flex;
   align-items: center;
-  gap: 0.35rem;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+  padding-bottom: 0.5rem;
+}
+
+.sec-card-title {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.sec-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
   padding: 0.2rem 0.55rem;
   border-radius: 9999px;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 
-.sec-pass {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.35);
-}
-
-.sec-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.sec-item {
-  background: var(--card-inner, #0f172a);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 0.85rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.sec-item-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--text);
-}
-
-.sec-item-desc {
-  font-size: 0.76rem;
+.sec-card-body {
+  font-size: 0.78rem;
   color: var(--text-muted);
-  line-height: 1.4;
+  line-height: 1.5;
+}
+
+.sec-card-body strong {
+  color: var(--text);
 }
