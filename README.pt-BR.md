@@ -156,7 +156,6 @@ flowchart TD
 ---
 ## 👨‍💻 Autor: Hugo Reis
 Cloud Infrastructure, DevOps & Security Analyst
-
-💼 LinkedIn: linkedin.com/in/hugo-nogueira-dos-reis
-🌐 Portfólio em Produção: hugoreis.cloud
-🐙 GitHub: github.com/hnreis
+- 💼 LinkedIn: linkedin.com/in/hugo-nogueira-dos-reis
+- 🌐 Portfólio em Produção: hugoreis.cloud
+- 🐙 GitHub: github.com/hnreis
