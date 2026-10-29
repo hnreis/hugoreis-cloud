@@ -73,6 +73,10 @@ flowchart TD
     class LB,OKE,IGW,NGW,SGW oci;
     class User edge;
 ```
+---
+## 🏗️ Esteira DevSecOps (Shift-Left Pipeline)
+
+A esteira de integração e entrega contínua (CI/CD) valida a segurança do código, dependências e contentores antes de autorizar qualquer modificação no cluster:
 ```mermaid
 flowchart TD
     Dev["👨‍💻 Dev (Commit / Push)"] -->|"git push origin main"| GH["🐙 GitHub Actions (Runner CI/CD)"]
