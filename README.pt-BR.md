@@ -69,38 +69,6 @@ flowchart TD
 </p>
 
 ---
-## 🚀Esteira Automatizada de CI/CD (GitHub Actions)
-
-A cada commit enviado para a branch main, a esteira executa o ciclo completo de entrega contínua sem tempo de inatividade (Zero Downtime):
-
-```mermaid
-flowchart TD
-    Dev["👨‍💻 Engenheiro (Hugo Reis)"] -->|"git push origin main"| GH["🐙 GitHub Actions Pipeline"]
-
-    subgraph CI ["Integração Contínua (CI)"]
-        direction TB
-        Checkout["1. Checkout do Código-Fonte"] --> QEMU["2. Configuração QEMU & Docker Buildx"] --> Build["3. Compilação Nativa ARM64 (Ampere A1)"] --> Push["4. Publicação no OCI Registry (ord.ocir.io)<br/>• Tag Imutável Git SHA<br/>• Tag :latest"]
-    end
-
-    subgraph CD ["Entrega Contínua (CD)"]
-        direction TB
-        Auth["5. Autenticação OCI CLI (Chave de API)"] --> Kube["6. Kubeconfig Dinâmico do OKE"] --> Deploy["7. kubectl set image (hugoreis-app)"] --> Rollout["8. Checagem de Saúde & Validação Zero Downtime"]
-    end
-
-    GH --> CI
-    CI --> CD
-    CD -->|"Carga de Trabalho Atualizada com Sucesso"| OKE[("☸️ Cluster OKE em Produção")]
-
-    classDef dev fill:#334155,stroke:#94a3b8,color:#fff;
-    classDef gh fill:#2088ff,stroke:#1d4ed8,color:#fff;
-    classDef steps fill:#1e293b,stroke:#38bdf8,stroke-width:1px,color:#f8fafc;
-    classDef prod fill:#059669,stroke:#10b981,stroke-width:2px,color:#fff;
-
-    class Dev dev;
-    class GH gh;
-    class Checkout,QEMU,Build,Push,Auth,Kube,Deploy,Rollout steps;
-    class OKE prod;
-```
 # 🛡️ hugoreis.cloud — Infraestrutura MultiCloud & DevSecOps
 
 [![Deploy OKE](https://github.com/hnreis/hugoreis-cloud/actions/workflows/deploy.yml/badge.svg)](https://github.com/hnreis/hugoreis-cloud/actions/workflows/deploy.yml)
@@ -122,36 +90,36 @@ Ambiente corporativo de produção executado na **Oracle Cloud Infrastructure (O
 A esteira de integração e entrega contínua (CI/CD) valida a segurança do código, dependências e contentores antes de autorizar a implementação no cluster:
 
 ```mermaid
-flowchart LR
-    Dev["👨‍💻 Dev (Commit/Push)"] -->|"git push origin main"| GH["🐙 GitHub Actions"]
+flowchart TD
+    Dev["👨‍💻 Dev (Commit / Push)"] -->|"git push origin main"| GH["🐙 GitHub Actions (Runner CI/CD)"]
 
-    subgraph ShiftLeft ["Security Gates (Shift-Left)"]
+    subgraph ShiftLeft ["🛡️ 1. Security Gates (Shift-Left)"]
         direction TB
-        Gitleaks["🔑 1. Gitleaks (Secret Scanning)"]
-        Semgrep["🔍 2. Semgrep (SAST - OWASP Top 10)"]
+        Gitleaks["🔑 Gitleaks — Secret Scanning<br/>(Bloqueio de credenciais e chaves)"]
+        Semgrep["🔍 Semgrep — SAST (OWASP Top 10)<br/>(Varredura estática de vulnerabilidades)"]
         Gitleaks --> Semgrep
     end
 
-    subgraph CI ["Build & Container Security"]
+    subgraph CI ["📦 2. Build & Container Security"]
         direction TB
-        Build["📦 3. Build ARM64 (Docker Buildx)"]
-        Trivy["🛡️ 4. Trivy (SCA & Container Scan)"]
-        Push["🚀 5. Push Imutável OCIR (ord.ocir.io)"]
+        Build["⚙️ Docker Buildx — Multi-Arch<br/>(Compilação nativa linux/arm64)"]
+        Trivy["🛡️ Trivy — SCA & Container Scan<br/>(Auditoria de CVEs e dependências)"]
+        Push["🚀 OCIR Push — Imutável<br/>(ord.ocir.io/axmlxl6nbuxb/hugoreis-app)"]
         Build --> Trivy --> Push
     end
 
-    subgraph CD ["Continuous Deployment (Zero Downtime)"]
+    subgraph CD ["☸️ 3. Continuous Deployment (OKE)"]
         direction TB
-        Auth["🔐 6. OCI Auth & Kubeconfig"]
-        Deploy["☸️ 7. Rollout no Cluster OKE"]
-        PSS["🔒 8. Pod Security Verification"]
+        Auth["🔐 OCI Auth & Kubeconfig Gen<br/>(Chaves de API seguras)"]
+        Deploy["🔄 kubectl set image / rollout<br/>(Atualização sem indisponibilidade)"]
+        PSS["🔒 Pod Security Verification<br/>(Restricted, Non-Root, drop ALL)"]
         Auth --> Deploy --> PSS
     end
 
     GH --> ShiftLeft
     ShiftLeft --> CI
     CI --> CD
-    CD -->|"Produção Saudável"| Prod[("🌐 hugoreis.cloud")]
+    CD -->|"Carga Saudável & Validada"| Prod[("🌐 hugoreis.cloud (Produção)")]
 
     classDef dev fill:#334155,stroke:#94a3b8,color:#fff;
     classDef gh fill:#2088ff,stroke:#1d4ed8,color:#fff;
