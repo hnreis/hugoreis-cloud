@@ -134,6 +134,59 @@
       </div>
     </div>
 
+<!-- DevSecOps & AppSec Governance Posture Panel -->
+    <section class="card" style="margin-top: 1.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem;">
+        <h2 style="font-size: 1.15rem; color: var(--accent); margin: 0;">🛡️ DevSecOps & AppSec Governance (Shift-Left)</h2>
+        <span class="sec-badge sec-pass">● Secure Pipeline</span>
+      </div>
+      <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
+        Automated CI/CD security validation gates enforcing industry-standard DevSecOps controls across source code and runtime workloads:
+      </p>
+
+      <div class="sec-grid">
+        <div class="sec-item">
+          <div class="sec-item-title">
+            <span>🔑 Secret Scanning</span>
+            <span class="sec-badge sec-pass">0 Leaks</span>
+          </div>
+          <div class="sec-item-desc">
+            <strong>Gitleaks:</strong> Full git commit history inspection actively blocking private keys, API tokens, and credentials.
+          </div>
+        </div>
+
+        <div class="sec-item">
+          <div class="sec-item-title">
+            <span>🔍 SAST (Code)</span>
+            <span class="sec-badge sec-pass">OWASP Top 10</span>
+          </div>
+          <div class="sec-item-desc">
+            <strong>Semgrep:</strong> Static analysis of application code and manifests preventing injection flaws and strict CSP bypasses.
+          </div>
+        </div>
+
+        <div class="sec-item">
+          <div class="sec-item-title">
+            <span>📦 Container & SCA</span>
+            <span class="sec-badge sec-pass">0 CVEs</span>
+          </div>
+          <div class="sec-item-desc">
+            <strong>Trivy:</strong> ARM64 image package auditing and Software Composition Analysis with surgical patching in Dockerfile.
+          </div>
+        </div>
+
+        <div class="sec-item">
+          <div class="sec-item-title">
+            <span>☸️ Pod Hardening</span>
+            <span class="sec-badge sec-pass">Restricted</span>
+          </div>
+          <div class="sec-item-desc">
+            <strong>K8s PSS:</strong> <code>allowPrivilegeEscalation: false</code>, non-root execution, and complete kernel capability dropping (<code>drop: ALL</code>).
+          </div>
+        </div>
+      </div>
+    </section>
+    
     <footer>
       <p>
         <strong>Hugo Reis</strong> &bull; 
