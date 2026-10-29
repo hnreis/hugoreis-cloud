@@ -143,3 +143,32 @@ footer a { color: var(--accent); text-decoration: none; }
 .sec-card-body strong {
   color: var(--text);
 }
+/* Classes utilitárias para conformidade com CSP Strict (Zero Inline Styles) */
+.sec-section {
+  margin-top: 1.5rem;
+}
+
+.sec-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.6rem;
+}
+
+.sec-heading {
+  font-size: 1.15rem;
+  color: var(--accent);
+  margin: 0;
+}
+
+.sec-intro {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.text-muted-desc {
+  color: var(--text-muted);
+}
