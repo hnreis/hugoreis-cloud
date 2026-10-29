@@ -143,8 +143,7 @@ flowchart TD
     class Prod prod;
 ```
 ---
-## 👨‍💻 Autor
-## Hugo Reis
+## 👨‍💻 Autor: Hugo Reis
 Cloud Infrastructure, DevOps & Security Analyst
 
 💼 LinkedIn: linkedin.com/in/hugo-nogueira-dos-reis
