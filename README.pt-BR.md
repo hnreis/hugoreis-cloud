@@ -101,6 +101,72 @@ flowchart TD
     class Checkout,QEMU,Build,Push,Auth,Kube,Deploy,Rollout steps;
     class OKE prod;
 ```
+# 🛡️ hugoreis.cloud — Infraestrutura MultiCloud & DevSecOps
+
+[![Deploy OKE](https://github.com/hnreis/hugoreis-cloud/actions/workflows/deploy.yml/badge.svg)](https://github.com/hnreis/hugoreis-cloud/actions/workflows/deploy.yml)
+![DevSecOps](https://img.shields.io/badge/Security-Shift--Left-blueviolet)
+![Gitleaks](https://img.shields.io/badge/Secret%20Scanning-Gitleaks-brightgreen)
+![Semgrep](https://img.shields.io/badge/SAST-Semgrep%20OWASP-blue)
+![Trivy](https://img.shields.io/badge/SCA%20%26%20Container-Trivy-00a896)
+![K8s PSS](https://img.shields.io/badge/Pod%20Security-Restricted-success)
+![Mozilla Observatory](https://img.shields.io/badge/Mozilla%20Observatory-A%2B%20(115%2F100)-success)
+
+[🇺🇸 Switch to English](README.md) | [🌐 Aceder à Aplicação em Produção](https://www.hugoreis.cloud)
+
+Ambiente corporativo de produção executado na **Oracle Cloud Infrastructure (OCI)** e na borda da **Cloudflare**, desenhado sob os princípios de **Zero Trust**, **Shift-Left Security** e orquestração gerenciada com **Kubernetes (OKE)** em nós nativos ARM64 (Ampere A1).
+
+---
+
+## 🏗️ Topologia da Esteira DevSecOps (Shift-Left Pipeline)
+
+A esteira de integração e entrega contínua (CI/CD) valida a segurança do código, dependências e contentores antes de autorizar a implementação no cluster:
+
+```mermaid
+flowchart LR
+    Dev["👨‍💻 Dev (Commit/Push)"] -->|"git push origin main"| GH["🐙 GitHub Actions"]
+
+    subgraph ShiftLeft ["Security Gates (Shift-Left)"]
+        direction TB
+        Gitleaks["🔑 1. Gitleaks (Secret Scanning)"]
+        Semgrep["🔍 2. Semgrep (SAST - OWASP Top 10)"]
+        Gitleaks --> Semgrep
+    end
+
+    subgraph CI ["Build & Container Security"]
+        direction TB
+        Build["📦 3. Build ARM64 (Docker Buildx)"]
+        Trivy["🛡️ 4. Trivy (SCA & Container Scan)"]
+        Push["🚀 5. Push Imutável OCIR (ord.ocir.io)"]
+        Build --> Trivy --> Push
+    end
+
+    subgraph CD ["Continuous Deployment (Zero Downtime)"]
+        direction TB
+        Auth["🔐 6. OCI Auth & Kubeconfig"]
+        Deploy["☸️ 7. Rollout no Cluster OKE"]
+        PSS["🔒 8. Pod Security Verification"]
+        Auth --> Deploy --> PSS
+    end
+
+    GH --> ShiftLeft
+    ShiftLeft --> CI
+    CI --> CD
+    CD -->|"Produção Saudável"| Prod[("🌐 hugoreis.cloud")]
+
+    classDef dev fill:#334155,stroke:#94a3b8,color:#fff;
+    classDef gh fill:#2088ff,stroke:#1d4ed8,color:#fff;
+    classDef sec fill:#4c1d95,stroke:#8b5cf6,stroke-width:1px,color:#fff;
+    classDef ci fill:#1e293b,stroke:#38bdf8,stroke-width:1px,color:#fff;
+    classDef cd fill:#065f46,stroke:#10b981,stroke-width:1px,color:#fff;
+    classDef prod fill:#047857,stroke:#34d399,stroke-width:2px,color:#fff;
+
+    class Dev dev;
+    class GH gh;
+    class Gitleaks,Semgrep sec;
+    class Build,Trivy,Push ci;
+    class Auth,Deploy,PSS cd;
+    class Prod prod;
+```
 ---
 ## 🛡️ Pilares Centrais de Segurança & Engenharia (Zero Trust)
 1. Mascaramento de Origem e Anti-WAF Bypass
