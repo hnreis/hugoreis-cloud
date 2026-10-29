@@ -1,8 +1,8 @@
 <p align="center">
-  <a href="README.md"><b>🇺🇸 English</b></a> | <a href="README.pt-BR.md"><b>🇧🇷 Português</b></a>
+  <a href="README.md"><b>🇺🇸 English</b></a> | <a href="README.pt-BR.md"><b>🇧🇷 Switch to Portuguese</b></a>
 </p>
 
-# Production-Grade MultiCloud Infrastructure & Bilingual SPA
+# 🛡️ hugoreis.cloud — MultiCloud Infrastructure & DevSecOps
 
 <p align="center">
   <img src="https://img.shields.io/badge/Oracle_Cloud-OKE_Ampere_A1-F80000?style=for-the-badge&logo=oracle&logoColor=white" alt="Oracle Cloud" />
@@ -12,23 +12,34 @@
   <img src="https://img.shields.io/badge/Security-Zero_Trust-darkgreen?style=for-the-badge" alt="Zero Trust" />
 </p>
 
+<p align="center">
+  <a href="https://github.com/hnreis/hugoreis-cloud/actions/workflows/deploy.yml"><img src="https://github.com/hnreis/hugoreis-cloud/actions/workflows/deploy.yml/badge.svg" alt="Deploy OKE" /></a>
+  <img src="https://img.shields.io/badge/Security-Shift--Left-blueviolet" alt="DevSecOps Shift-Left" />
+  <img src="https://img.shields.io/badge/Secret%20Scanning-Gitleaks-brightgreen" alt="Gitleaks" />
+  <img src="https://img.shields.io/badge/SAST-Semgrep%20OWASP-blue" alt="Semgrep" />
+  <img src="https://img.shields.io/badge/SCA%20%26%20Container-Trivy-00a896" alt="Trivy" />
+  <img src="https://img.shields.io/badge/Pod%20Security-Restricted-success" alt="K8s PSS" />
+  <img src="https://img.shields.io/badge/Mozilla_Observatory-A%2B%20(115%2F100)-success" alt="Mozilla Observatory" />
+</p>
+
 ---
 
 ## 🌐 Production Environment
 * **Live Domain:** [https://www.hugoreis.cloud](https://www.hugoreis.cloud)
-* **Edge & DNS:** Cloudflare Edge with Strict TLS 1.3 and automated Let's Encrypt certificates via cert-manager.
+* **Edge & DNS Resolution:** Cloudflare Global Anycast Edge with Strict TLS 1.3 and automated ACME renewal via cert-manager.
 * **Cloud Origin:** Oracle Cloud Infrastructure (OCI) — Region `us-chicago-1`.
+* **Architectural Philosophy:** Perimeter Zero Trust, corporate network isolation, and automated Shift-Left security validation.
 
 ---
 
-## 🏛️ Cloud Architecture Topology
+## 🏛️ Cloud Architecture Topology (Zero Trust on OCI)
 
-Inbound traffic never reaches compute workloads directly. The infrastructure implements multi-tiered perimeter defense and network isolation:
+Inbound traffic never reaches compute workloads directly. The infrastructure implements multi-tiered defense and network segmentation across public and private subnets:
 
 ```mermaid
 flowchart TD
     subgraph Edge ["🌐 Edge & Internet Layer"]
-        User["👤 End User / Web Browser"] -->|HTTPS Request| CF["🟧 Cloudflare Global Edge<br/>• Active Proxy (Orange Cloud)<br/>• TLS 1.3 / Strict HSTS<br/>• WAF & Bot Mitigation"]
+        User["👤 End User / Web Browser"] -->|HTTPS Request| CF["🟧 Cloudflare Global Edge<br/>• Active WAF (Orange Cloud)<br/>• TLS 1.3 / Strict HSTS<br/>• Bot Mitigation & Strict CSP"]
     end
 
     subgraph OCI ["☁️ Oracle Cloud Infrastructure (Region: us-chicago-1)"]
@@ -36,23 +47,23 @@ flowchart TD
             IGW["🚪 Internet Gateway (IGW)"]
 
             subgraph SubnetPublic ["🛡️ Public Subnet (10.0.1.0/24)"]
-                LB["⚖️ Flexible Load Balancer<br/>[Origin Masked by Cloudflare]<br/>(Restricted to 15 Cloudflare CIDRs)"]
+                LB["⚖️ OCI Flexible Load Balancer<br/>[Origin Masked by Cloudflare]<br/>(Restricted to 15 Cloudflare CIDRs)"]
             end
 
             subgraph SubnetPrivate ["🔒 Private Subnet (10.0.2.0/24)"]
-                OKE["☸️ OKE Managed Cluster (Ampere A1 ARM64)<br/>• 2x Worker Nodes (1 OCPU / 6 GB RAM each)<br/>• Replicated SPA Pods (hugoreis-app)<br/>• cert-manager Controller"]
+                OKE["☸️ Managed OKE Cluster (Ampere A1 ARM64)<br/>• 2x Worker Nodes (1 OCPU / 6 GB RAM each)<br/>• Replicated Application Pods (hugoreis-app)<br/>• cert-manager (ACME DNS-01 Challenge)"]
             end
 
-            NGW["⚡ NAT Gateway<br/>(Secure Unidirectional Outbound)"]
-            SGW["📦 Service Gateway<br/>(Private Oracle Network / OCIR)"]
+            NGW["⚡ NAT Gateway<br/>(Secure Outbound Egress to Internet)"]
+            SGW["📦 Service Gateway<br/>(Private OCI Backbone to OCIR Registry)"]
         end
     end
 
-    CF -->|"Inspected HTTPS (Port 443 Only)"| IGW
+    CF -->|"Inspected HTTPS Traffic (Port 443 Only)"| IGW
     IGW --> LB
     LB -->|"Internal NodePort Routing"| OKE
-    OKE -.->|"OS Updates & ACME DNS-01"| NGW
-    OKE -.->|"Private Image Pulls"| SGW
+    OKE -.->|"OS Updates & DNS-01 Validation"| NGW
+    OKE -.->|"Private Image Pulls (Zero Internet)"| SGW
     NGW -.->|"Secure Egress"| Edge
 
     classDef cloudflare fill:#f38020,stroke:#d96b14,stroke-width:2px,color:#fff;
@@ -61,56 +72,9 @@ flowchart TD
     class CF cloudflare;
     class LB,OKE,IGW,NGW,SGW oci;
     class User edge;
+
 ```
----
-### 📐 Detailed Network Blueprint & Security Boundaries
-<p align="center">
-  <img src="./oci-network-topology.png" alt="OCI Network Topology Blueprint" width="800">
-</p>
-
----
-## 🚀 Automated CI/CD Pipeline (GitHub Actions)
-
-Every release pushed to the main branch undergoes fully automated continuous delivery with zero downtime:
-
-```mermaid
-flowchart TD
-    Dev["👨‍💻 Engineer (Hugo Reis)"] -->|"git push origin main"| GH["🐙 GitHub Actions Pipeline"]
-
-    subgraph CI ["Continuous Integration (CI)"]
-        direction TB
-        Checkout["1. Source Code Checkout"] --> QEMU["2. Setup QEMU & Docker Buildx"] --> Build["3. Native ARM64 Build (Ampere A1)"] --> Push["4. Push to OCI Registry (ord.ocir.io)<br/>• Immutable Git SHA Tag<br/>• :latest Tag"]
-    end
-
-    subgraph CD ["Continuous Deployment (CD)"]
-        direction TB
-        Auth["5. Authenticate OCI CLI (API Key)"] --> Kube["6. Dynamic OKE Kubeconfig"] --> Deploy["7. kubectl set image (hugoreis-app)"] --> Rollout["8. Healthcheck & Zero Downtime Validation"]
-    end
-
-    GH --> CI
-    CI --> CD
-    CD -->|"Workload Updated Successfully"| OKE[("☸️ Production OKE Cluster")]
-
-    classDef dev fill:#334155,stroke:#94a3b8,color:#fff;
-    classDef gh fill:#2088ff,stroke:#1d4ed8,color:#fff;
-    classDef steps fill:#1e293b,stroke:#38bdf8,stroke-width:1px,color:#f8fafc;
-    classDef prod fill:#059669,stroke:#10b981,stroke-width:2px,color:#fff;
-
-    class Dev dev;
-    class GH gh;
-    class Checkout,QEMU,Build,Push,Auth,Kube,Deploy,Rollout steps;
-    class OKE prod;
-```
----
-## 🛡️ Core Engineering & Security Pillars (Zero Trust)
-
-1. Origin Masking & Anti-WAF Bypass
- - Cloudflare Orange Cloud: The real origin IP of the Oracle Load Balancer is strictly masked. All external DNS queries resolve exclusively to Cloudflare Anycast IP addresses.
-- Perimeter Ingress Firewall: Port 443 on the Public Subnet accepts inbound traffic strictly from Cloudflare's 15 official IPv4 CIDR blocks. Unauthenticated scans or direct-to-IP probing attempts are dropped at the edge.
-
-2. Private Subnet Compute Isolation
-- Kubernetes worker nodes reside in a dedicated private subnet (10.0.2.0/24) without public IP addresses.
-- Outbound traffic uses a dedicated NAT Gateway (unidirectional outbound-only), and container pulls from OCI Registry (OCIR) travel internally across the Oracle network via a Service Gateway.
+📐 Network Topology Blueprint
 ---
 ## ⚙️ Technical Specifications
 
@@ -123,10 +87,60 @@ flowchart TD
 | **Edge / DNS / WAF** | Cloudflare | Active Proxy + Strict TLS 1.3 |
 | **SSL Certificates** | cert-manager + Let's Encrypt | Automated renewal via DNS-01 |
 | **CI/CD Pipeline** | GitHub Actions | Multi-arch build and zero-downtime deployment |
-
 ---
-## 👨‍💻 Author
-## Hugo Reis
+## 🏗️ DevSecOps Delivery Pipeline (Shift-Left CI/CD)
+The continuous integration and delivery pipeline automatically enforces security gates across source code, third-party packages, and container images prior to cluster deployment:
+
+```mermaid
+flowchart TD
+    Dev["👨‍💻 Developer (Commit / Push)"] -->|"git push origin main"| GH["🐙 GitHub Actions (CI/CD Runner)"]
+
+    subgraph ShiftLeft ["🛡️ 1. Security Gates (Shift-Left)"]
+        direction TB
+        Gitleaks["🔑 Gitleaks — Secret Scanning<br/>(Automated credentials & token gate)"]
+        Semgrep["🔍 Semgrep — SAST (OWASP Top 10)<br/>(Static application security scanning)"]
+        Gitleaks --> Semgrep
+    end
+
+    subgraph CI ["📦 2. Build & Container Security"]
+        direction TB
+        Build["⚙️ Docker Buildx — Multi-Arch<br/>(Native linux/arm64 build)"]
+        Trivy["🛡️ Trivy CLI — SCA & Container Scan<br/>(CVE audit & dependency check)"]
+        Push["🚀 OCIR Push — Immutable Digest<br/>(ord.ocir.io/axmlxl6nbuxb/hugoreis-app)"]
+        Build --> Trivy --> Push
+    end
+
+    subgraph CD ["☸️ 3. Continuous Deployment (OKE)"]
+        direction TB
+        Auth["🔐 OCI Auth & Kubeconfig Gen<br/>(Secure API key exchange)"]
+        Deploy["🔄 kubectl rollout / rolling update<br/>(Zero-downtime workload release)"]
+        PSS["🔒 Pod Security Verification<br/>(Restricted, Non-Root, drop ALL)"]
+        Auth --> Deploy --> PSS
+    end
+
+    GH --> ShiftLeft
+    ShiftLeft --> CI
+    CI --> CD
+    CD -->|"Healthy & Verified Workload"| Prod[("🌐 hugoreis.cloud (Live Production)")]
+
+    classDef dev fill:#334155,stroke:#94a3b8,color:#fff;
+    classDef gh fill:#2088ff,stroke:#1d4ed8,color:#fff;
+    classDef sec fill:#4c1d95,stroke:#8b5cf6,stroke-width:1px,color:#fff;
+    classDef ci fill:#1e293b,stroke:#38bdf8,stroke-width:1px,color:#fff;
+    classDef cd fill:#065f46,stroke:#10b981,stroke-width:1px,color:#fff;
+    classDef prod fill:#047857,stroke:#34d399,stroke-width:2px,color:#fff;
+
+    class Dev dev;
+    class GH gh;
+    class Gitleaks,Semgrep sec;
+    class Build,Trivy,Push ci;
+    class Auth,Deploy,PSS cd;
+    class Prod prod;
+```
+---
+## 👨‍💻 Author: Hugo Reis
 Cloud Infrastructure & Network Security Engineer
+
 - 💼 LinkedIn: linkedin.com/in/hugo-nogueira-dos-reis
 - 🌐 Portfolio: hugoreis.cloud
+- 🐙 GitHub: github.com/hnreis
