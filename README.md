@@ -74,7 +74,12 @@ flowchart TD
     class User edge;
 
 ```
-📐 Network Topology Blueprint
+---
+## 📐 Network Topology Blueprint
+<p align="center">
+  <img src="./oci-network-topology.png" alt="OCI Network Topology Blueprint" width="800">
+</p>
+
 ---
 ## ⚙️ Technical Specifications
 
