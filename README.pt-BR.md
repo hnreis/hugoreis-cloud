@@ -74,6 +74,25 @@ flowchart TD
     class User edge;
 ```
 ---
+## 📐Blueprint Esquemático de Rede & Fronteiras de Segurança
+<p align="center">
+  <img src="./oci-network-topology.png" alt="Blueprint da Topologia de Rede OCI" width="800">
+</p>
+
+---
+## ⚙️ Especificações Técnicas
+
+| Componente | Tecnologia | Configuração / Dimensionamento |
+| :--- | :--- | :--- |
+| **Provedor de Nuvem** | Oracle Cloud Infrastructure (OCI) | Região `us-chicago-1` |
+| **Orquestrador** | Kubernetes (OKE) | Versão: 1.37 (Control Plane Gerenciado) |
+| **Nós de Computação** | Ampere A1 (ARM64) | 2 Nós (1 OCPU, 6 GB RAM cada — total de 2 OCPUs / 12 GB RAM) |
+| **Balanceador** | OCI Flexible Load Balancer | Roteamento interno via NodePort |
+| **Borda / DNS / WAF** | Cloudflare | Proxy Ativo + TLS 1.3 Estrito |
+| **Certificados SSL** | cert-manager + Let's Encrypt | Renovação automática via DNS-01 |
+| **Pipeline de CI/CD** | GitHub Actions | Compilação multi-arquitetura e deploy zero downtime |
+
+---
 ## 🏗️ Esteira DevSecOps (Shift-Left Pipeline)
 
 A esteira de integração e entrega contínua (CI/CD) valida a segurança do código, dependências e contentores antes de autorizar qualquer modificação no cluster:
