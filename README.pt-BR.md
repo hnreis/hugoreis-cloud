@@ -142,6 +142,17 @@ flowchart TD
     class Auth,Deploy,PSS cd;
     class Prod prod;
 ```
+## 🔒 Matriz de Governança & Controlos DevSecOps
+
+| Controlo de Segurança | Tecnologia | Configuração / Mitigação Técnica |
+| :--- | :--- | :--- |
+| **Secret Scanning** | Gitleaks | Inspeção estrita de histórico e commits para bloqueio automático de credenciais, chaves privadas e tokens. |
+| **SAST (Código)** | Semgrep | Análise estática de código-fonte alinhada ao OWASP Top 10 e prevenção contra violações de CSP. |
+| **SCA & Container Security** | Trivy CLI | Auditoria de pacotes e CVEs na imagem nativa ARM64 com correção cirúrgica de dependências no Dockerfile. |
+| **Monitorização Contínua** | Dependabot | Varredura semanal automatizada de dependências e imagens Docker com abertura proativa de Pull Requests. |
+| **Pod Hardening** | Kubernetes PSS | Perfil Restricted: execução não-root, `allowPrivilegeEscalation: false` e descarte total de chamadas de kernel (`drop: ALL`). |
+| **Anti-WAF Bypass** | OCI Security Lists / NSG | Tráfego na porta 443 restrito exclusivamente aos 15 blocos CIDR oficiais da Cloudflare, bloqueando conexões diretas à origem. |
+| **Hardening de Borda** | Cloudflare Rules | TLS 1.3 estrito, HSTS Preload e Content Security Policy sem diretivas `unsafe-inline` (Classificação A+ no Mozilla Observatory). |
 ---
 ## 👨‍💻 Autor: Hugo Reis
 Cloud Infrastructure, DevOps & Security Analyst
