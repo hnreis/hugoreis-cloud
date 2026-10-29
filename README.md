@@ -23,7 +23,6 @@
 </p>
 
 ---
-
 ## 🌐 Production Environment
 * **Live Domain:** [https://www.hugoreis.cloud](https://www.hugoreis.cloud)
 * **Edge & DNS Resolution:** Cloudflare Global Anycast Edge with Strict TLS 1.3 and automated ACME renewal via cert-manager.
@@ -31,9 +30,7 @@
 * **Architectural Philosophy:** Perimeter Zero Trust, corporate network isolation, and automated Shift-Left security validation.
 
 ---
-
 ## 🏛️ Cloud Architecture Topology (Zero Trust on OCI)
-
 Inbound traffic never reaches compute workloads directly. The infrastructure implements multi-tiered defense and network segmentation across public and private subnets:
 
 ```mermaid
@@ -82,7 +79,6 @@ flowchart TD
 
 ---
 ## ⚙️ Technical Specifications
-
 | Component | Technology | Configuration / Sizing |
 | :--- | :--- | :--- |
 | **Cloud Provider** | Oracle Cloud Infrastructure (OCI) | Region: `us-chicago-1` |
@@ -92,6 +88,7 @@ flowchart TD
 | **Edge / DNS / WAF** | Cloudflare | Active Proxy + Strict TLS 1.3 |
 | **SSL Certificates** | cert-manager + Let's Encrypt | Automated renewal via DNS-01 |
 | **CI/CD Pipeline** | GitHub Actions | Multi-arch build and zero-downtime deployment |
+
 ---
 ## 🏗️ DevSecOps Delivery Pipeline (Shift-Left CI/CD)
 The continuous integration and delivery pipeline automatically enforces security gates across source code, third-party packages, and container images prior to cluster deployment:
@@ -148,13 +145,13 @@ flowchart TD
 
 | Security Control | Technology | Configuration / Technical Mitigation |
 | :--- | :--- | :--- |
-| **Secret Scanning** | Gitleaks | Strict commit history and working tree analysis blocking exposed private keys, cloud tokens, and credentials[cite: 10]. |
-| **SAST (Code)** | Semgrep | Static application security testing tailored to OWASP Top 10 vulnerabilities and CSP bypass prevention[cite: 10]. |
-| **SCA & Container Security** | Trivy CLI | Native ARM64 container auditing and Software Composition Analysis with surgical base package upgrades in Dockerfile[cite: 10]. |
-| **Continuous Monitoring** | Dependabot | Weekly automated tracking of container base images and dependencies with proactive Pull Request generation[cite: 10]. |
-| **Pod Hardening** | Kubernetes PSS | Restricted profile: non-root runtime, `allowPrivilegeEscalation: false`, and comprehensive kernel capability dropping (`drop: ALL`)[cite: 10]. |
-| **Anti-WAF Bypass** | OCI Security Lists / NSG | Port 443 ingress strictly limited to Cloudflare's 15 official IPv4 CIDR blocks, eliminating direct origin attacks[cite: 10, 11]. |
-| **Edge Hardening** | Cloudflare Rules | Strict TLS 1.3, HSTS Preload, and strict Content Security Policy eliminating `unsafe-inline` scripts (A+ Grade on Mozilla Observatory)[cite: 10, 11]. |
+| **Secret Scanning** | Gitleaks | Strict commit history and working tree analysis blocking exposed private keys, cloud tokens, and credentials. |
+| **SAST (Code)** | Semgrep | Static application security testing tailored to OWASP Top 10 vulnerabilities and CSP bypass prevention. |
+| **SCA & Container Security** | Trivy CLI | Native ARM64 container auditing and Software Composition Analysis with surgical base package upgrades in Dockerfile. |
+| **Continuous Monitoring** | Dependabot | Weekly automated tracking of container base images and dependencies with proactive Pull Request generation. |
+| **Pod Hardening** | Kubernetes PSS | Restricted profile: non-root runtime, `allowPrivilegeEscalation: false`, and comprehensive kernel capability dropping (`drop: ALL`). |
+| **Anti-WAF Bypass** | OCI Security Lists / NSG | Port 443 ingress strictly limited to Cloudflare's 15 official IPv4 CIDR blocks, eliminating direct origin attacks. |
+| **Edge Hardening** | Cloudflare Rules | Strict TLS 1.3, HSTS Preload, and strict Content Security Policy eliminating `unsafe-inline` scripts (A+ Grade on Mozilla Observatory). |
 
 ---
 ## 👨‍💻 Author: Hugo Reis
