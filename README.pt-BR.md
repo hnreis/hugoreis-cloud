@@ -72,7 +72,7 @@ flowchart TD
     class CF cloudflare;
     class LB,OKE,IGW,NGW,SGW oci;
     class User edge;
-```
+
 flowchart TD
     Dev["👨‍💻 Dev (Commit / Push)"] -->|"git push origin main"| GH["🐙 GitHub Actions (Runner CI/CD)"]
 
