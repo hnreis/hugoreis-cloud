@@ -74,12 +74,6 @@ flowchart TD
     class User edge;
 ```
 ---
-## 📐Blueprint Esquemático de Rede & Fronteiras de Segurança
-<p align="center">
-  <img src="./oci-network-topology.png" alt="Blueprint da Topologia de Rede OCI" width="800">
-</p>
-
----
 ## ⚙️ Especificações Técnicas
 
 | Componente | Tecnologia | Configuração / Dimensionamento |
@@ -91,6 +85,12 @@ flowchart TD
 | **Borda / DNS / WAF** | Cloudflare | Proxy Ativo + TLS 1.3 Estrito |
 | **Certificados SSL** | cert-manager + Let's Encrypt | Renovação automática via DNS-01 |
 | **Pipeline de CI/CD** | GitHub Actions | Compilação multi-arquitetura e deploy zero downtime |
+
+---
+## 📐Blueprint Esquemático de Rede & Fronteiras de Segurança
+<p align="center">
+  <img src="./oci-network-topology.png" alt="Blueprint da Topologia de Rede OCI" width="800">
+</p>
 
 ---
 ## 🏗️ Esteira DevSecOps (Shift-Left Pipeline)
@@ -141,7 +141,7 @@ flowchart TD
     class Build,Trivy,Push ci;
     class Auth,Deploy,PSS cd;
     class Prod prod;
-
+```
 ---
 ## 👨‍💻 Autor
 ## Hugo Reis
