@@ -72,3 +72,48 @@ flowchart TD
     class CF cloudflare;
     class LB,OKE,IGW,NGW,SGW oci;
     class User edge;
+```
+flowchart TD
+    Dev["👨‍💻 Dev (Commit / Push)"] -->|"git push origin main"| GH["🐙 GitHub Actions (Runner CI/CD)"]
+
+    subgraph ShiftLeft ["🛡️ 1. Security Gates (Shift-Left)"]
+        direction TB
+        Gitleaks["🔑 Gitleaks — Secret Scanning<br/>(Bloqueio de credenciais e chaves)"]
+        Semgrep["🔍 Semgrep — SAST (OWASP Top 10)<br/>(Varredura estática de vulnerabilidades)"]
+        Gitleaks --> Semgrep
+    end
+
+    subgraph CI ["📦 2. Build & Container Security"]
+        direction TB
+        Build["⚙️ Docker Buildx — Multi-Arch<br/>(Compilação nativa linux/arm64)"]
+        Trivy["🛡️ Trivy CLI — SCA & Container Scan<br/>(Auditoria de CVEs e dependências)"]
+        Push["🚀 OCIR Push — Imutável<br/>(ord.ocir.io/axmlxl6nbuxb/hugoreis-app)"]
+        Build --> Trivy --> Push
+    end
+
+    subgraph CD ["☸️ 3. Continuous Deployment (OKE)"]
+        direction TB
+        Auth["🔐 OCI Auth & Kubeconfig Gen<br/>(Chaves de API seguras)"]
+        Deploy["🔄 kubectl rollout / rolling update<br/>(Atualização sem indisponibilidade)"]
+        PSS["🔒 Pod Security Verification<br/>(Restricted, Non-Root, drop ALL)"]
+        Auth --> Deploy --> PSS
+    end
+
+    GH --> ShiftLeft
+    ShiftLeft --> CI
+    CI --> CD
+    CD -->|"Carga Saudável & Validada"| Prod[("🌐 hugoreis.cloud (Produção)")]
+
+    classDef dev fill:#334155,stroke:#94a3b8,color:#fff;
+    classDef gh fill:#2088ff,stroke:#1d4ed8,color:#fff;
+    classDef sec fill:#4c1d95,stroke:#8b5cf6,stroke-width:1px,color:#fff;
+    classDef ci fill:#1e293b,stroke:#38bdf8,stroke-width:1px,color:#fff;
+    classDef cd fill:#065f46,stroke:#10b981,stroke-width:1px,color:#fff;
+    classDef prod fill:#047857,stroke:#34d399,stroke-width:2px,color:#fff;
+
+    class Dev dev;
+    class GH gh;
+    class Gitleaks,Semgrep sec;
+    class Build,Trivy,Push ci;
+    class Auth,Deploy,PSS cd;
+    class Prod prod;
