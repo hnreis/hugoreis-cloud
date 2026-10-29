@@ -133,7 +133,60 @@
         <p>Processadores de arquitetura ARM com alta densidade operacional e imagens Docker compiladas nativamente.</p>
       </div>
     </div>
+    
+<!-- Painel de DevSecOps & Postura de Segurança (AppSec) -->
+    <section class="card" style="margin-top: 1.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem;">
+        <h2 style="font-size: 1.15rem; color: var(--accent); margin: 0;">🛡️ Governança DevSecOps & AppSec (Shift-Left)</h2>
+        <span class="sec-badge sec-pass">● Pipeline Seguro</span>
+      </div>
+      <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
+        Esteira de CI/CD integrada com portões de validação automatizados de segurança (Security Gates) em conformidade com as práticas de DevSecOps:
+      </p>
 
+      <div class="sec-grid">
+        <div class="sec-item">
+          <div class="sec-item-title">
+            <span>🔑 Secret Scanning</span>
+            <span class="sec-badge sec-pass">0 Leaks</span>
+          </div>
+          <div class="sec-item-desc">
+            <strong>Gitleaks:</strong> Varredura de histórico e commits para bloqueio automático de chaves privadas e credenciais.
+          </div>
+        </div>
+
+        <div class="sec-item">
+          <div class="sec-item-title">
+            <span>🔍 SAST (Código)</span>
+            <span class="sec-badge sec-pass">OWASP Top 10</span>
+          </div>
+          <div class="sec-item-desc">
+            <strong>Semgrep:</strong> Análise estática do código-fonte e manifesto estrito prevenindo injeções e violações de CSP.
+          </div>
+        </div>
+
+        <div class="sec-item">
+          <div class="sec-item-title">
+            <span>📦 Container & SCA</span>
+            <span class="sec-badge sec-pass">0 CVEs</span>
+          </div>
+          <div class="sec-item-desc">
+            <strong>Trivy:</strong> Auditoria de pacotes e dependências na imagem ARM64 com mitigação cirúrgica no Dockerfile.
+          </div>
+        </div>
+
+        <div class="sec-item">
+          <div class="sec-item-title">
+            <span>☸️ Pod Hardening</span>
+            <span class="sec-badge sec-pass">Restricted</span>
+          </div>
+          <div class="sec-item-desc">
+            <strong>K8s PSS:</strong> <code>allowPrivilegeEscalation: false</code> e descarte de privilégios de kernel (<code>drop: ALL</code>).
+          </div>
+        </div>
+      </div>
+    </section>
+    
     <footer>
       <p>
         <strong>Hugo Reis</strong> &bull; 
